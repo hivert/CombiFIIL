@@ -5,9 +5,9 @@ Cours de Master 2 [FIL](http://www.u-psud.fr/fr/formations/diplomes/masters/info
 
 ## Contenu
 
-Cours : [Note de cours](https://github.com/hivert/CombiFIL/tree/master/Cours)
-Progs : [Les programmes](https://github.com/hivert/CombiFIL/tree/master/Progs) écrits en cours
-TP : [Sujets et programmes](https://github.com/hivert/CombiFIL/tree/master/TP) pour les travaux pratiques
+- Cours : [Note de cours](https://github.com/hivert/CombiFIL/tree/master/Cours)
+- Progs : [Les programmes](https://github.com/hivert/CombiFIL/tree/master/Progs) écrits en cours
+- TP : [Sujets et programmes](https://github.com/hivert/CombiFIL/tree/master/TP) pour les travaux pratiques
 
 ## Livres de référence:
 
