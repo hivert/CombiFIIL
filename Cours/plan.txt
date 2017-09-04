@@ -1,0 +1,32 @@
+Cours 1
+- Interface d'enumeration list/count/rank/unrank/iter/first/next/random
+- exemple des chaines de 0,1 de longeur n
+- bijection avec subsets et compositions
+- chaine de 0,1 de longueur n à k=1
+
+T.P 1
+- generation recursive de chemins
+- une bijection avec les arbres binaires ??
+- generation des permutations et multiperm, application au test
+
+Cours 2 / T. P. 2
+CM- Exemple des arbres binaires sur les grammaires
+TP- Arbres d'une profondeur donnée
+
+Cours 3
+Backtracking + Gramaire
+
+Cours T.P.
+T.P. Backtracking
+
+T.P.
+Grammaire
+
+Cours/T.P.
+Optim paralellisme
+
+Exam / Soutenance projet ?
+
+
+
+
