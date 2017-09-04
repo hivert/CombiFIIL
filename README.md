@@ -1,13 +1,13 @@
 # Comptage et énumération de structures de données:
 # Algorithmes efficaces et implantations optimisées
 
-Cours de Master 2 [FIL](http://www.u-psud.fr/fr/formations/diplomes/masters/informatique/parcours-fondements-de-l-informatique-et-ingenierie-du-logiciel.html) de l'université Paris-Sud
+Cours de Master 2 [FIIL](http://www.u-psud.fr/fr/formations/diplomes/masters/informatique/parcours-fondements-de-l-informatique-et-ingenierie-du-logiciel.html) de l'université Paris-Sud
 
 ## Contenu
 
-- Cours : [Note de cours](https://github.com/hivert/CombiFIL/tree/master/Cours)
-- Progs : [Les programmes](https://github.com/hivert/CombiFIL/tree/master/Progs) écrits en cours
-- TP : [Sujets et programmes](https://github.com/hivert/CombiFIL/tree/master/TP) pour les travaux pratiques
+- Cours : [Note de cours](https://github.com/hivert/CombiFIIL/tree/master/Cours)
+- Progs : [Les programmes](https://github.com/hivert/CombiFIIL/tree/master/Progs) écrits en cours
+- TP : [Sujets et programmes](https://github.com/hivert/CombiFIIL/tree/master/TP) pour les travaux pratiques
 
 ## Livres de référence:
 
