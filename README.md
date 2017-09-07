@@ -1,7 +1,11 @@
 # Comptage et énumération de structures de données:
 # Algorithmes efficaces et implantations optimisées
 
-Cours de Master 2 [FIIL](http://www.u-psud.fr/fr/formations/diplomes/masters/informatique/parcours-fondements-de-l-informatique-et-ingenierie-du-logiciel.html) de l'université Paris-Sud
+Cours du parcours [Fondements de l'Informatique et Ingénierie du
+Logiciel](http://www.u-psud.fr/fr/formations/diplomes/masters/informatique/parcours-fondements-de-l-informatique-et-ingenierie-du-logiciel.html)
+du Master 2 d'informatique de l'université Paris-Sud
+
+:warning: Cette page ainsi que le cours sont en construction
 
 ## Contenu
 
