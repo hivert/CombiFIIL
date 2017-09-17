@@ -1,0 +1,303 @@
+\documentclass{beamer}
+\usetheme{COURS}
+\usepackage{tcolorbox}
+\usepackage{textpos}
+
+
+\def\red{\color{red}}
+\def\blue{\color{blue}}
+\def\green{\color{green}}
+
+\def\opstyle#1{\ensuremath{\operatorname{#1}}}
+
+
+\title[Algorithmes combinatoires]%
+{\bf Grammaires de descriptions d'objets}
+\author{\textbf{\Large Florent Hivert}\\[5mm]
+  Mél : \texttt{Florent.Hivert@lri.fr}\\
+  Adresse universelle : \texttt{http://www.lri.fr/\~{ }hivert}
+}
+\date{}
+
+\begin{document}
+\newcommand{\Count}{\opstyle{count}}
+\newcommand{\List}{\opstyle{list}}
+\newcommand{\Iter}{\opstyle{iter}}
+\newcommand{\Unrank}{\opstyle{unrank}}
+\newcommand{\Rank}{\opstyle{rank}}
+\newcommand{\First}{\opstyle{first}}
+\newcommand{\Next}{\opstyle{next}}
+\newcommand{\Random}{\opstyle{random}}
+
+\newcommand{\Concat}{\opstyle{concat}}
+\newcommand{\BS}{\opstyle{BitString}}
+\newcommand{\Perm}{\opstyle{Perm}}
+
+\newcommand{\Oh}{O}
+
+%***********************************************************************
+\frame{\titlepage}
+%***********************************************************************
+\begin{frame}{Objectifs : algorithmes génériques}
+
+  \begin{itemize}
+  \item \textbf{Identifier les composants de base:}
+    \medskip
+
+    $\Longrightarrow$ Singleton, union, produit cartésien, ensemble et
+    multiensemble\dots \pause\bigskip
+
+  \item Comprendre comment composer les briques de base
+    \medskip
+
+    $\Longrightarrow$ grammaire de description, classe combinatoire
+    \bigskip
+
+  \item $\Longrightarrow$ Algorithmes génériques
+  \end{itemize}
+\end{frame}
+
+\section{Union disjointe}
+\begin{frame}{Union disjointe}
+
+  \begin{definition}
+    On écrit $C = A \sqcup B$ et on dit que $C$ est l'\textbf{union disjointe}
+    de $A$ et $B$ si $C = A \sqcup B$ et $A \cap B = \emptyset$.
+  \end{definition}
+  \pause\bigskip
+
+  Alors:
+  \begin{itemize}
+  \item $\Count(C) = \Count(A) + \Count(B)$
+  \item On peut prendre: $\List(C) = \Concat(\List(A), \List(B))$
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Itération sur une union disjointe}
+
+  On fixe l'ordre d'énumération tel que
+  $$\List(A\sqcup B) := \Concat(\List(A), \List(B))$$
+  \bigskip
+
+  Itération en Python:
+\begin{listing}{1}
+    def iterunion(A, B):
+        for a in A:
+            yield a
+        for b in B:
+            yield b
+\end{listing}
+\end{frame}
+
+\begin{frame}[fragile]{$\First, \Next$ sur une union disjointe}
+
+  $$\List(A\sqcup B) := \Concat(\List(A), \List(B))$$
+\begin{listing}{1}
+    def first_union(A, B):
+        return A.first()
+
+    def next_union(A, B, x):
+        if x in A:
+            try:
+                return A.next(x)
+            except StopIteration:
+                return B.first()
+        else:
+            return B.next(x)
+\end{listing}
+\end{frame}
+
+
+\begin{frame}[fragile]{$\Rank$ sur une union disjointe}
+
+  $$\List(A\sqcup B) := \Concat(\List(A), \List(B))$$
+\begin{listing}{1}
+    def rank_union(A, B, x):
+        if x in A:
+            return A.rank(x)
+        else:
+            return A.count() + B.rank(x)
+
+    def unrank_union(A, B, i):
+        if i < A.count():
+            return A.unrank(i)
+        else:
+            return B.unrank(i - A.count())
+\end{listing}
+\end{frame}
+
+\begin{frame}{Le principe de l'idée récursive}
+
+  \begin{verse}\bf\color{blue}\LARGE
+    Quand on a une bonne idée, \\
+    on l'applique récursivement: \\
+    on obtient le plus souvent\\
+    une encore bien meilleure idée.
+  \end{verse}
+  \pause\bigskip
+
+  \begin{itemize}
+  \item Unions disjointes récursives
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Les chaînes de $n$-bits ayant $k$-bits à $1$}
+
+  Une chaîne de bit non vide commence soit par un $0$, soit par un $1$:
+  $$\BS(n, k) = 0\cdot\BS(n-1, k)\ \sqcup\ 1\cdot\BS(n-1, k-1)$$
+  Idem triangle de pascal:
+  $$\binom{n}{k} = \binom{n-1}{k} + \binom{n-1}{k-1}$$
+  \begin{itemize}
+  \item $\BS(n, k).\Count() = \binom{n}{k}$ 
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{$\Rank, \Unrank$ pour les chaînes de $n$-bits ayant
+    $k$-bits à $1$}
+
+\small
+\begin{listing}{1}
+def rank_BSnk(x):
+    if not x: return 0
+    if x[0] = 0:
+        return rank_BSnk(x[1:])
+    else:
+        return binom(len(x), sum(x)) + rank_BSnk(x[1:])
+
+def unrank_BSnk(n, k, i):
+    if n == 0:
+        return []
+    bn1k = binom(n-1, k)
+    if i < bn1k:
+        return [0]+unrank_BSnk(n-1, k, i)
+    else:
+        return [1]+unrank_BSnk(n-1, k-1, i-bn1k)
+\end{listing}
+\end{frame}
+
+
+\begin{frame}{Le problème du calcul de la cardinalité}
+
+  \begin{PROBLEM}
+    Le calcul récursif des coefficients binomiaux $\binom{n}{k}$ n'est pas
+    efficace car on recalcule plusieurs fois la même chose.
+    \medskip
+
+    Plus généralement, le calcul récursif des cardinalités sera très
+    inefficace pour la même raison.
+  \end{PROBLEM}
+\end{frame}
+
+
+\begin{frame}{Parenthèse: mémoization et programmation dynamique}
+
+  \begin{NOTE}
+    \begin{itemize}
+    \item\textbf{Mémoisation:} on mémorise tous les calculs pendant la
+      récursion au momment où on les fait \pause\bigskip
+
+    \item\textbf{Programmation Dynamique:} résoud les sous-problèmes, des plus
+      petits aux plus grands en stockant les résultats intermédiaires.
+    \end{itemize}
+  \end{NOTE}
+  \pause\bigskip
+
+  En général, la programmation dynamique est plus efficace mais plus longue à
+  mettre en oeuvre: il faut avoir planifié l'utilisation de la mémoire.
+\end{frame}
+
+\begin{frame}{Autre exemple: les permutations}
+
+  Les permutés d'un ensemble $X := \{x_1, x_2, \dots, x_n\}$:
+  $$\Perm\{1,2,3\} = 
+  1\cdot\Perm\{2,3\}\ \sqcup\ 
+  2\cdot\Perm\{1,3\}\ \sqcup\ 
+  3\cdot\Perm\{1,2\}
+  $$
+  Plus généralement:
+  \begin{NOTE}
+    Énumération lexicographique des permutations:
+    $$
+    \Perm(X) = \bigsqcup_{i=1}^{n} x_i\cdot\Perm(X/\{x_i\})
+    $$
+  \end{NOTE}
+  \begin{itemize}
+  \item $\Perm(X).\Count() = |X|!$
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Généralisation: permuté d'un multiensemble}
+
+  $$\Perm\{1,1,2,3\} = 
+  1\cdot\Perm\{1,2\}\ \sqcup\ 
+  2\cdot\Perm\{1,1,3\}\ \sqcup\ 
+  3\cdot\Perm\{1,1,2\}
+  $$
+  Notation: $\{1,1,2,3\} = 1^22^13^1$
+  \bigskip
+  $$\Perm(1^22^33^1) = 
+  1\cdot\Perm(1^12^33^1)\ \sqcup\ 
+  2\cdot\Perm(1^12^23^1)\ \sqcup\ 
+  3\cdot\Perm(1^12^3)
+  $$
+
+  \begin{NOTE}
+    Énumération lexicographique des multi-permutations:
+    $$
+    \Perm(X) = \bigsqcup_{i=1}^{n} x_i\cdot\Perm(X/\{x_i\})
+    $$
+  \end{NOTE}
+\end{frame}
+
+\begin{frame}{Coefficient multinomiaux:}
+  \begin{multline*}
+    \binom{|I|}{i_1,i_2,\dots,i_k} = \binom{|I|-1}{i_1-1,i_2,\dots,i_k} +
+    \binom{|I|-1}{i_1,i_2-1,\dots,i_k} + \\ \dots +
+    \binom{|I|-1}{i_1,i_2,\dots,i_k-1}
+  \end{multline*}
+  \pause\bigskip
+
+  $$
+  \Perm(x_1^{i_1}\dots x_k^{i_k}).\Count() = 
+  \frac{(i_1+i_2+\dots+i_k)!}{i_1!i_2!\dots i_k!} =
+  \binom{|I|}{i_1,i_2,\dots,i_k}
+  $$
+\end{frame}
+
+\section{Le produit cartesien}
+\begin{frame}{Le produit cartesien}
+
+  \begin{definition}
+    On appelle \textbf{produit cartesien} de $A$ et $B$ l'ensemble $C$ noté 
+    $C:=A\times B$ défini par
+    $$C := \{(a,b)\ \mid\ a\in A, b\in B)\}\,.$$
+  \end{definition}
+  \pause\bigskip
+
+  Alors:
+  \begin{itemize}
+  \item $\Count(C) = \Count(A)\cdot\Count(B)$
+  \item On peut prendre la liste dans l'ordre lexicographique:
+    $\List(C) = 
+    [(a_1, b_1), (a_1, b_2), (a_1, b_3),\dots  (a_2, b_1), (a_2, b_2)\dots]$.
+  \end{itemize}
+\end{frame}
+
+\section{Notion de classe combinatoire}
+
+\begin{frame}{Notion de classe combinatoire}
+  \begin{DEFN}[Classe combinatoire]
+    On appelle \textbf{classe combinatoire} un ensemble $C$ dont les éléments
+    $e$ ont une taille (nommée aussi degrée) noté $|e|$ et tels que l'ensemble
+    $C_n$ des éléments de taille $n$ est fini:
+    \[
+    \Count(\{e\in C\ \mid\ |e| = n\}) < \infty
+    \]
+  \end{DEFN}
+\end{frame}
+
+\section{Le produit cartesien gradué}
+\begin{frame}{Le produit cartesien gradué}
+  
+\end{frame}
+\end{document}
