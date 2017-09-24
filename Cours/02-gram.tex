@@ -129,10 +129,10 @@
 \begin{frame}{Le principe de l'idée récursive}
 
   \begin{verse}\bf\color{blue}\LARGE
-    Quand on a une bonne idée, \\
-    on l'applique récursivement: \\
+    Quand on a un'bonne idée, \\
+    on l'appliqu'récursivement: \\
     on obtient le plus souvent\\
-    une encore bien meilleure idée.
+    une bien meilleure idée !
   \end{verse}
   \pause\bigskip
 
@@ -158,11 +158,12 @@
 \small
 \begin{listing}{1}
 def rank_BSnk(x):
-    if not x: return 0
-    if x[0] = 0:
+    if not x:        # liste vide
+        return 0
+    if x[0] == 0:
         return rank_BSnk(x[1:])
     else:
-        return binom(len(x), sum(x)) + rank_BSnk(x[1:])
+        return binom(len(x)-1, sum(x)-1) + rank_BSnk(x[1:])
 
 def unrank_BSnk(n, k, i):
     if n == 0:
@@ -228,17 +229,17 @@ def unrank_BSnk(n, k, i):
 
 \begin{frame}{Généralisation: permuté d'un multiensemble}
 
-  $$\Perm\{1,1,2,3\} = 
-  1\cdot\Perm\{1,2\}\ \sqcup\ 
-  2\cdot\Perm\{1,1,3\}\ \sqcup\ 
+  $$\Perm\{1,1,2,3\} =
+  1\cdot\Perm\{1,2\}\ \sqcup\
+  2\cdot\Perm\{1,1,3\}\ \sqcup\
   3\cdot\Perm\{1,1,2\}
   $$
   Notation: $\{1,1,2,3\} = 1^22^13^1$
   \bigskip
-  $$\Perm(1^22^33^1) = 
-  1\cdot\Perm(1^12^33^1)\ \sqcup\ 
-  2\cdot\Perm(1^12^23^1)\ \sqcup\ 
-  3\cdot\Perm(1^12^3)
+  $$\Perm(1^22^33^1) =
+  1\cdot\Perm(1^12^33^1)\ \sqcup\
+  2\cdot\Perm(1^22^23^1)\ \sqcup\
+  3\cdot\Perm(1^22^3)
   $$
 
   \begin{NOTE}
@@ -264,8 +265,53 @@ def unrank_BSnk(n, k, i):
   $$
 \end{frame}
 
+\begin{frame}{Autre application: transmission en codage NRZ}
+
+  Non Return to Zero, Manière très élémentaire pour transmettre de
+  l'information sur un ligne:\qquad 0 : -V,\qquad 1: +V
+
+  \[\includegraphics[width=8cm]{media/450px-Nrz.png}\]
+  {\small Source: \url{https://fr.wikipedia.org/wiki/Non_Return_to_Zero}}
+\end{frame}
+
+\begin{frame}{Perte de synchronisation en codage NRZ}
+
+  S'il on envoie une suite trop longue de bit identique, on perd la
+  synchronisation.
+  \medskip
+
+  \begin{definition}
+    Une séquence de longueur $n$ est dite non-repétitive d'ordre $k$
+    (abréviation $NR(k, n)$) si elle ne contient pas se séquence de plus de
+    $k$ bits identiques consécutifs.
+  \end{definition}
+  Notation: $NR(k, n, c, i)$ les suites qui commencent par au plus $c$ $i$:
+  \begin{itemize}
+  \item $NR(k, n, 0, 0) = 1 \cdot NR(k, n-1, k-1, 1)$
+  \item $NR(k, n, c, 0) = 0 \cdot NR(k, n-1, c-1, 0) \sqcup 
+               1 \cdot NR(k, n-1, k-1, 1)$
+             \item Idem en écahngeant les rôles de $0$ et $1$.
+  \end{itemize}
+  \pause
+  \LARGE C'est un automate fini !
+\end{frame}
+
+\begin{frame}{Union récursive et automates finis}
+
+  \begin{NOTE}
+    La méthode précédente fonctionne pour toute les automates finis
+    déterministes.
+  \end{NOTE}
+  \[
+  \operatorname{Lang}(\text{Term}) = \{\epsilon\}
+  \]
+  \[
+  \operatorname{Lang}(E) = \bigsqcup_{E\rightarrow_a E'} a\cdot \operatorname{Lang}(E')
+  \]
+\end{frame}
+
 \section{Le produit cartesien}
-\begin{frame}{Le produit cartesien}
+\begin{frame}{Le produit cartésien}
 
   \begin{definition}
     On appelle \textbf{produit cartesien} de $A$ et $B$ l'ensemble $C$ noté 
@@ -283,6 +329,54 @@ def unrank_BSnk(n, k, i):
   \end{itemize}
 \end{frame}
 
+\begin{frame}[fragile]{Itération sur un produit cartésien}
+
+  Ordre lexicographique:
+  \bigskip
+
+  Itération en Python:
+\begin{listing}{1}
+    def iter_cartprod(A, B):
+        for a in A:
+            for b in B:
+                yield (a, b)
+\end{listing}
+\end{frame}
+
+\begin{frame}[fragile]{$\First, \Next$ sur un produit cartésien}
+
+  Ordre lexicographique:
+  \bigskip
+\begin{listing}{1}
+    def first_cartprod(A, B):
+        return (A.first(), B.first())
+
+    def next_cartprod(A, B, x):
+        (a , b) = x      # pattern matching
+        try:
+           return (a, B.next(b))
+        except StopIteration:
+           return (A.next(a), B.first())
+\end{listing}
+\end{frame}
+
+
+\begin{frame}[fragile]{$\Rank$ sur un produit cartésien}
+
+  Ordre lexicographique:
+  \bigskip
+\begin{listing}{1}
+    def rank_union(A, B, x):
+        (a , b) = x      # pattern matching
+        A.rank(a)*B.count() + B.rank(b)
+
+    def unrank_union(A, B, i):
+        c = B.count()
+        return (A.unrank(i // c), B.unrank(i % c))
+\end{listing}
+\end{frame}
+
+
 \section{Notion de classe combinatoire}
 
 \begin{frame}{Notion de classe combinatoire}
@@ -294,10 +388,119 @@ def unrank_BSnk(n, k, i):
     \Count(\{e\in C\ \mid\ |e| = n\}) < \infty
     \]
   \end{DEFN}
+  Exemple:
+  \begin{itemize}
+  \item Les mots de longeurs $n$ sur un alphabet
+  \item Les permutations de taille $n$
+  \item Les arbres binaires de tailles $n$
+  \end{itemize}
+\end{frame}
+
+\section{L'union disjointe graduée}
+\begin{frame}{L'union disjointe graduée}
+
+  Si $C = A \sqcup B$, les élements de $A$ et $B$ gardent leur taille:
+
+  \[C_n := A_n \sqcup B_n\]
+
+  Alors:
+  \begin{itemize}
+  \item $C.\Count(n) = A.\Count(n) + B.\Count(n)$
+  \item On peut prendre: $C.\List(n) = \Concat(A.\List(b), B.\List(n))$
+  \end{itemize}
+  \bigskip\pause
+
+  $\Longrightarrow\quad$ On peut réutiliser tout ce que l'on a vu.
 \end{frame}
 
 \section{Le produit cartesien gradué}
 \begin{frame}{Le produit cartesien gradué}
-  
+
+  Idée : les tailles (complexité, coût, nbr d'emplacements mémoires) s'ajoutent.
+  \begin{definition}
+    La taille de la paire $(a, B)\in A\times B$ est la somme des tailles:
+    \[|(a, b)|_{A\times b} := |a|_A + |b|_B\]
+  \end{definition}
 \end{frame}
+
+\begin{frame}{Le produit cartesien gradué}
+
+  \begin{NOTE}
+    Si $C = A \times B$ alors
+    \[
+    C_n\quad=\quad\bigsqcup_{i+j=n}  A_i \times B_j
+    \]
+  \end{NOTE}
+  \bigskip\pause
+
+  Calcul de la cardinalité:
+  \[
+  |C_n| = \sum_{i+j=n}  |A_i| \times |B_j| = 
+          \sum_{i=0}^{n}  |A_i| \times |B_{n-i}|
+  \]
+  On peut alors prend l'ordre union/lexicographique suivant:
+  \[
+  \begin{array}{|c|c|c|c|c|c|}
+    \hline
+    A_0\times B_n &     A_1\times B_{n-1} &  A_2\times B_{n-2} &  
+    \quad\dots\quad &
+    A_{n}\times B_{0}
+    \\ \hline
+  \end{array}
+  \]
+
+\end{frame}
+
+\newcommand{\BinTree}{\opstyle{BinTree}}
+\newcommand{\Leaf}{\opstyle{Leaf}}
+\newcommand{\Node}{\opstyle{Node}}
+
+\begin{frame}{Application les arbres binaires}
+
+  Spécification récursive:
+  \[\BinTree\quad=\quad\Leaf\quad \sqcup\quad \Node(\BinTree\times\BinTree)\]
+  \pause\bigskip
+
+  Deux manières de compter les tailles:
+  \begin{enumerate}
+  \item Nombre de feuille:
+  \[\BinTree\quad=\quad\Leaf_1\quad \sqcup\quad \BinTree\times\BinTree\]
+  \item Nombre de Noeuds:
+  \[\BinTree\quad=\quad\Leaf_0\quad \sqcup\quad \Node_1\times\BinTree\times\BinTree\]
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]{Liste de tous les arbres à $n$~N\oe uds}
+   \begin{ALGO}
+    \begin{itemize}
+    \item \textbf{Entrée:} un entier positif ou nul \texttt{n}
+    \item \textbf{Sortie:} une liste d'arbres
+    \end{itemize}
+\begin{verbatim}
+    if n == 0:
+        yield arbreVide()
+    for i in range(n):
+        for g in BinTree(i):
+            for f in BinTree(n-1-i):
+                yield Noeud(g,d)
+\end{verbatim}
+  \end{ALGO}
+\end{frame}
+
+\begin{frame}{Nombre de Catalan}
+  \begin{PROP}
+    Le nombre d'arbres binaires à $n$ n\oe uds est appelé $n$-ième nombre de
+    Catalan noté $C_n$. Les nombre de Catalan vérifient la récurrence:
+    \begin{equation*}
+      C_0=1\qquad C_n = \sum_{i=0}^{n-1} C_i C_{n-1-i}\,.
+    \end{equation*}
+    On en déduit
+    \begin{equation*}
+      C_n = \frac{(2n)!}{n!(n+1)!}\,.
+    \end{equation*}
+  \end{PROP}
+  Voici les premières valeurs:
+  \[C_0=1,\ C_1=1,\ C_2=2,\ C_3=5,\ C_4=14,\ C_5=42,\ c_6=132\,.\]
+\end{frame}
+
 \end{document}
