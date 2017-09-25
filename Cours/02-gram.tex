@@ -276,7 +276,7 @@ def unrank_BSnk(n, k, i):
 
 \begin{frame}{Perte de synchronisation en codage NRZ}
 
-  S'il on envoie une suite trop longue de bit identique, on perd la
+  S'il on envoie une suite trop longue de bits identiques, on perd la
   synchronisation.
   \medskip
 
@@ -290,7 +290,7 @@ def unrank_BSnk(n, k, i):
   \item $NR(k, n, 0, 0) = 1 \cdot NR(k, n-1, k-1, 1)$
   \item $NR(k, n, c, 0) = 0 \cdot NR(k, n-1, c-1, 0) \sqcup 
                1 \cdot NR(k, n-1, k-1, 1)$
-             \item Idem en écahngeant les rôles de $0$ et $1$.
+             \item Idem en échangeant les rôles de $0$ et $1$.
   \end{itemize}
   \pause
   \LARGE C'est un automate fini !
@@ -303,10 +303,11 @@ def unrank_BSnk(n, k, i):
     déterministes.
   \end{NOTE}
   \[
-  \operatorname{Lang}(\text{Term}) = \{\epsilon\}
+  \operatorname{Lang}_0(\text{Term}) = \{\epsilon\}
   \]
   \[
-  \operatorname{Lang}(E) = \bigsqcup_{E\rightarrow_a E'} a\cdot \operatorname{Lang}(E')
+  \operatorname{Lang}_n(E) = 
+  \bigsqcup_{E\rightarrow_a E'} a\cdot \operatorname{Lang}_{n-1}(E')
   \]
 \end{frame}
 
@@ -325,7 +326,7 @@ def unrank_BSnk(n, k, i):
   \item $\Count(C) = \Count(A)\cdot\Count(B)$
   \item On peut prendre la liste dans l'ordre lexicographique:
     $\List(C) = 
-    [(a_1, b_1), (a_1, b_2), (a_1, b_3),\dots  (a_2, b_1), (a_2, b_2)\dots]$.
+    [(a_0, b_0), (a_0, b_1), (a_0, b_1),\dots  (a_1, b_0), (a_1, b_1)\dots]$.
   \end{itemize}
 \end{frame}
 
@@ -366,11 +367,11 @@ def unrank_BSnk(n, k, i):
   Ordre lexicographique:
   \bigskip
 \begin{listing}{1}
-    def rank_union(A, B, x):
+    def rank_cartprod(A, B, x):
         (a , b) = x      # pattern matching
         A.rank(a)*B.count() + B.rank(b)
 
-    def unrank_union(A, B, i):
+    def unrank_cartprod(A, B, i):
         c = B.count()
         return (A.unrank(i // c), B.unrank(i % c))
 \end{listing}
