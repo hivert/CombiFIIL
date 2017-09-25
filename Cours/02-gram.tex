@@ -36,6 +36,14 @@
 \newcommand{\Union}{\opstyle{Union}}
 \newcommand{\Prod}{\opstyle{Prod}}
 
+\newcommand{\mA}{\mathcal{A}}
+\newcommand{\mB}{\mathcal{B}}
+\newcommand{\mC}{\mathcal{C}}
+\newcommand{\mD}{\mathcal{D}}
+\newcommand{\mE}{\mathcal{E}}
+\newcommand{\mI}{\mathcal{I}}
+\newcommand{\mZ}{\mathcal{Z}}
+
 \newcommand{\Oh}{O}
 
 %***********************************************************************
@@ -295,23 +303,67 @@ def unrank_BSnk(n, k, i):
                1 \cdot NR(k, n-1, k-1, 1)$
              \item Idem en échangeant les rôles de $0$ et $1$.
   \end{itemize}
-  \pause
-  \LARGE C'est un automate fini !
+\end{frame}
+
+
+\begin{frame}{C'est un automate fini !}
+
+  \begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2.2cm,
+    semithick]
+    \tikzstyle{every state}=[inner sep=1pt, minimum size=6mm]
+
+    \node[initial,state] (I) {$\mI$};
+    \node[state] (A0) [above right of=I] {$\mA_0$};
+    \node[state] (B0) [right of=A0]      {$\mB_0$};
+    \node[state] (C0) [right of=B0]      {$\mC_0$};
+    \node[state] (D0) [right of=C0]      {$\mD_0$};
+    \node[state] (A1) [below right of=I] {$\mA_1$};
+    \node[state] (B1) [right of=A1]      {$\mB_1$};
+    \node[state] (C1) [right of=B1]      {$\mC_1$};
+    \node[state] (D1) [right of=C1]      {$\mD_1$};
+    \path (I)  edge node {0} (A0)
+               edge node [below] {1} (A1)
+          (A0) edge node {0} (B0)
+               edge [bend left=10] node {1} (A1) 
+          (B0) edge node {0} (C0)
+               edge node [pos=0.2,above] {1} (A1)
+          (C0) edge node {0} (D0)
+               edge node [pos=0.1,below] {1} (A1)
+          (D0) edge node [pos=0.1,below] {1} (A1)
+          (A1) edge [bend left=10] node {0} (A0) 
+               edge node [below] {1} (B1) 
+          (B1) edge node [pos=0.2,below] {0} (A0)
+               edge node [below] {1} (C1)
+          (C1) edge node [pos=0.1,above] {0} (A0)
+               edge node [below] {1} (D1)
+          (D1) edge node [pos=0.1,above] {0} (A0) ;
+  \end{tikzpicture}
+  Tous les états sont acceptants.
 \end{frame}
 
 \begin{frame}{Union récursive et automates finis}
 
   \begin{NOTE}
     La méthode précédente fonctionne pour toute les automates finis
-    déterministes.
+    déterministes. Si l'on note $\operatorname{Lang}_n(E)$ l'ensemble des mots
+    de longueur $n$ acceptés à partir de l'état $E$, alors on a la définition
+    récursive:
+    \begin{itemize}
+    \item Cas de base, pour un état $E$:
+      \[
+      \operatorname{Lang}_0(E) =
+      \begin{cases}
+        \{\varepsilon\} & \text{si $E$ est terminal} \\
+        \emptyset & \text{sinon}
+      \end{cases}
+      \]
+    \item Étape de la récursion:
+      \[
+      \operatorname{Lang}_n(E) = \bigsqcup_{E\rightarrow_a E'} a\cdot
+      \operatorname{Lang}_{n-1}(E')
+      \]
+    \end{itemize}
   \end{NOTE}
-  \[
-  \operatorname{Lang}_0(\text{Term}) = \{\epsilon\}
-  \]
-  \[
-  \operatorname{Lang}_n(E) = 
-  \bigsqcup_{E\rightarrow_a E'} a\cdot \operatorname{Lang}_{n-1}(E')
-  \]
 \end{frame}
 
 \section{Le produit cartesien}
@@ -385,13 +437,6 @@ def unrank_BSnk(n, k, i):
 \end{frame}
 
 
-\newcommand{\mA}{\mathcal{A}}
-\newcommand{\mB}{\mathcal{B}}
-\newcommand{\mC}{\mathcal{C}}
-\newcommand{\mD}{\mathcal{D}}
-\newcommand{\mE}{\mathcal{E}}
-\newcommand{\mI}{\mathcal{I}}
-\newcommand{\mZ}{\mathcal{Z}}
 \section{Notion de classe combinatoire}
 
 \begin{frame}{Notion de classe combinatoire}
@@ -568,6 +613,7 @@ def unrank_BSnk(n, k, i):
 
 \begin{frame}{Exemples: Codage d'un automate fini}
 
+\hspace{2.2cm}
 \begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=1.5cm,
                     semithick]
   \tikzstyle{every state}=[inner sep=1pt, minimum size=6mm]
@@ -605,6 +651,7 @@ def unrank_BSnk(n, k, i):
 
 \begin{frame}{Exemples: Codage d'un automate fini}
 
+\hspace{2.2cm}
 \begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=1.5cm,
                     semithick]
   \tikzstyle{every state}=[inner sep=1pt, minimum size=6mm]
@@ -625,7 +672,7 @@ def unrank_BSnk(n, k, i):
   ;
 \end{tikzpicture}
 
-Plus simple, on inclus la lettre dans l'état:
+Dans cet exemple: plus simple, on inclut la lettre dans l'état:
   \begin{align*}
     \mI &= \mE(\varepsilon)\ \sqcup\ \mA_0\ \sqcup\ \mA_1\\
     \mA_0 &= \mZ("0") \times (\mE(\varepsilon)\ \sqcup\ \mB_0 \sqcup\ \mA_1)\\
