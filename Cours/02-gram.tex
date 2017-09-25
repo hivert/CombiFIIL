@@ -2,6 +2,7 @@
 \usetheme{COURS}
 \usepackage{tcolorbox}
 \usepackage{textpos}
+\usetikzlibrary{arrows,automata}
 
 
 \def\red{\color{red}}
@@ -32,6 +33,8 @@
 \newcommand{\Concat}{\opstyle{concat}}
 \newcommand{\BS}{\opstyle{BitString}}
 \newcommand{\Perm}{\opstyle{Perm}}
+\newcommand{\Union}{\opstyle{Union}}
+\newcommand{\Prod}{\opstyle{Prod}}
 
 \newcommand{\Oh}{O}
 
@@ -325,8 +328,12 @@ def unrank_BSnk(n, k, i):
   \begin{itemize}
   \item $\Count(C) = \Count(A)\cdot\Count(B)$
   \item On peut prendre la liste dans l'ordre lexicographique:
-    $\List(C) = 
-    [(a_0, b_0), (a_0, b_1), (a_0, b_1),\dots  (a_1, b_0), (a_1, b_1)\dots]$.
+    \begin{align*}
+      \List(C) = [&(a_0, b_0), (a_0, b_1), (a_0, b_2),\dots, (a_0, b_l),\\
+                  &(a_1, b_0), (a_1, b_1), (a_1, b_2),\dots, (a_1, b_l),\\
+                  &(a_2, b_0), (a_2, b_1), (a_2, b_2),\dots, (a_2, b_l),\\
+                  &\hspace{2.7cm}\dots\hspace{2.7cm}].
+    \end{align*}
   \end{itemize}
 \end{frame}
 
@@ -378,81 +385,92 @@ def unrank_BSnk(n, k, i):
 \end{frame}
 
 
+\newcommand{\mA}{\mathcal{A}}
+\newcommand{\mB}{\mathcal{B}}
+\newcommand{\mC}{\mathcal{C}}
+\newcommand{\mD}{\mathcal{D}}
+\newcommand{\mE}{\mathcal{E}}
+\newcommand{\mI}{\mathcal{I}}
+\newcommand{\mZ}{\mathcal{Z}}
 \section{Notion de classe combinatoire}
 
 \begin{frame}{Notion de classe combinatoire}
   \begin{DEFN}[Classe combinatoire]
-    On appelle \textbf{classe combinatoire} un ensemble $C$ dont les éléments
+    On appelle \textbf{classe combinatoire} un ensemble $\mC$ dont les éléments
     $e$ ont une taille (nommée aussi degrée) noté $|e|$ et tels que l'ensemble
-    $C_n$ des éléments de taille $n$ est fini:
+    $\mC_n$ des éléments de taille $n$ est fini:
     \[
-    \Count(\{e\in C\ \mid\ |e| = n\}) < \infty
+    \Count(\{e\in \mC\ \mid\ |e| = n\}) < \infty
     \]
   \end{DEFN}
   Exemple:
   \begin{itemize}
-  \item Les mots de longeurs $n$ sur un alphabet
-  \item Les permutations de taille $n$
-  \item Les arbres binaires de tailles $n$
+  \item Les mots sur un alphabet où la taille est la longueur
+  \item Les permutations de $\{1,\dots n\}$ (taille = $n$)
+  \item Les arbres binaires où la taille est le nombre de noeuds
   \end{itemize}
 \end{frame}
 
 \section{L'union disjointe graduée}
 \begin{frame}{L'union disjointe graduée}
 
-  Si $C = A \sqcup B$, les élements de $A$ et $B$ gardent leur taille:
+  Si $\mC = \mA \sqcup \mB$, les élements de $\mA$ et $\mB$ gardent leur
+  taille dans l'union disjointe graduée:
 
-  \[C_n := A_n \sqcup B_n\]
+  \[\mC_n := \mA_n \sqcup \mB_n\]
 
   Alors:
   \begin{itemize}
-  \item $C.\Count(n) = A.\Count(n) + B.\Count(n)$
-  \item On peut prendre: $C.\List(n) = \Concat(A.\List(b), B.\List(n))$
+  \item $\mC.\Count(n) = \mA.\Count(n) + \mB.\Count(n)$
+  \item On peut prendre: $\mC.\List(n) = \Concat(\mA.\List(b), \mB.\List(n))$
   \end{itemize}
   \bigskip\pause
 
-  $\Longrightarrow\quad$ On peut réutiliser tout ce que l'on a vu.
+  $\Longrightarrow\quad$ On peut réutiliser tout ce que l'on a vu sur les
+  unions disjointes.
 \end{frame}
 
 \section{Le produit cartesien gradué}
 \begin{frame}{Le produit cartesien gradué}
 
-  Idée : les tailles (complexité, coût, nbr d'emplacements mémoires) s'ajoutent.
+  Idée : les tailles (complexité, coût, nbr d'emplacements mémoires)
+  s'ajoutent.
+  \bigskip
   \begin{definition}
-    La taille de la paire $(a, B)\in A\times B$ est la somme des tailles:
-    \[|(a, b)|_{A\times b} := |a|_A + |b|_B\]
+    La taille de la paire $(a, b)\in \mA\times \mB$ est la somme des tailles:
+    \[|(a, b)|_{\mA\times\mB} := |a|_\mA + |b|_\mB\]
   \end{definition}
 \end{frame}
 
 \begin{frame}{Le produit cartesien gradué}
 
   \begin{NOTE}
-    Si $C = A \times B$ alors
+    Si $\mC = \mA \times \mB$ alors
     \[
-    C_n\quad=\quad\bigsqcup_{i+j=n}  A_i \times B_j
+    \mC_n\quad=\quad\bigsqcup_{i+j=n}  \mA_i \times \mB_j
     \]
   \end{NOTE}
   \bigskip\pause
 
   Calcul de la cardinalité:
   \[
-  |C_n| = \sum_{i+j=n}  |A_i| \times |B_j| = 
-          \sum_{i=0}^{n}  |A_i| \times |B_{n-i}|
+  |\mC_n| = \sum_{i+j=n}  |\mA_i| \times |\mB_j| = 
+          \sum_{i=0}^{n}  |\mA_i| \times |\mB_{n-i}|
   \]
-  On peut alors prend l'ordre union/lexicographique suivant:
+  On peut alors prendre l'ordre union/lexicographique suivant:
   \[
   \begin{array}{|c|c|c|c|c|c|}
     \hline
-    A_0\times B_n &     A_1\times B_{n-1} &  A_2\times B_{n-2} &  
+    \mA_0\times \mB_n &     \mA_1\times \mB_{n-1} &  \mA_2\times \mB_{n-2} &  
     \quad\dots\quad &
-    A_{n}\times B_{0}
+    \mA_{n}\times \mB_{0}
     \\ \hline
   \end{array}
   \]
 
 \end{frame}
 
-\newcommand{\BinTree}{\opstyle{BinTree}}
+\newcommand{\BinTree}{\opstyle{\mathcal{B}in\mathcal{T}ree}}
 \newcommand{\Leaf}{\opstyle{Leaf}}
 \newcommand{\Node}{\opstyle{Node}}
 
@@ -482,7 +500,7 @@ def unrank_BSnk(n, k, i):
         yield arbreVide()
     for i in range(n):
         for g in BinTree(i):
-            for f in BinTree(n-1-i):
+            for d in BinTree(n-1-i):
                 yield Noeud(g,d)
 \end{verbatim}
   \end{ALGO}
@@ -495,13 +513,126 @@ def unrank_BSnk(n, k, i):
     \begin{equation*}
       C_0=1\qquad C_n = \sum_{i=0}^{n-1} C_i C_{n-1-i}\,.
     \end{equation*}
-    On en déduit
+    On peut trouver une formule close:
     \begin{equation*}
       C_n = \frac{(2n)!}{n!(n+1)!}\,.
     \end{equation*}
   \end{PROP}
   Voici les premières valeurs:
   \[C_0=1,\ C_1=1,\ C_2=2,\ C_3=5,\ C_4=14,\ C_5=42,\ c_6=132\,.\]
+\end{frame}
+
+\section{Specification d'une classe combinatoire}
+\begin{frame}{Specification d'une classe combinatoire}
+
+  But: on veut décrire une \textbf{classe combinatoire} de manière à pouvoir
+  appliquer automatiquement les algorithmes de comptage, itération,
+  génération,\dots.
+  \bigskip
+
+  Pour ceci, on va utiliser une \textbf{grammaire} qui code comment appliquer
+  récursivement les constructions précédentes.
+\end{frame}
+
+\begin{frame}{Specification d'une classe combinatoire}
+\begin{NOTE}[Grammaire de description d'objets]
+  Constructeurs terminaux:
+  \begin{itemize}
+  \item $\mE(o)$ : la classe qui contient un seul objet $o$ de taille $0$
+  \item $\mZ(o)$ : la classe qui contient un seul objet $o$ de taille $1$
+  \end{itemize}
+  Constructeurs binaires:
+  \begin{itemize}
+  \item $\mC = \Union(\mA, \mB)$ : union disjointe graduée:
+    \[|a|_\mC = |a|_\mA\ \text{si $a\in\mA$}\qquad
+      |a|_\mC = |b|_\mB\ \text{si $b\in\mB$}\]
+  \item $\mC = \Prod(\mA, \mB)$ : produit cartésien graduée:
+    \[|(a, b)|_\mC = |a|_\mA + |b|_\mB\ \text{si $a\in\mA$ et $b\in\mB$}\]
+  \end{itemize}
+\end{NOTE}
+\end{frame}
+
+\begin{frame}{Exemples:}
+
+  \begin{itemize}
+  \item Les arbres binaires, la taille est le nombres de \textbf{Noeuds}
+    \[
+    \BinTree = \Union(\mE(\bot), \Prod(\mZ(\circ), \Prod(\BinTree, \BinTree))
+    \]
+  \item Les arbres binaires, la taille est le nombres de \textbf{Feuilles}
+    \[
+    \BinTree = \Union(\mZ(\bot), \Prod(\BinTree, \BinTree))
+    \]
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Exemples: Codage d'un automate fini}
+
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=1.5cm,
+                    semithick]
+  \tikzstyle{every state}=[inner sep=1pt, minimum size=6mm]
+
+  \node[initial,state] (I)                     {$\mI$};
+  \node[state]         (A0) [above right of=I] {$\mA_0$};
+  \node[state]         (B0) [right of=A0]      {$\mB_0$};
+  \node[state]         (A1) [below right of=I] {$\mA_1$};
+  \node[state]         (B1) [right of=A1]      {$\mB_1$};
+  \path (I) edge node {0} (A0)
+            edge node [below] {1} (A1)
+        (A0) edge node {0} (B0)
+             edge [bend left] node {1} (A1)
+        (A1) edge node {0} (A0)
+             edge node [below] {1} (B1)
+        (B0) edge [bend left] node [below] {1} (A1)
+        (B1) edge [bend right] node [above] {0} (A0)
+  ;
+\end{tikzpicture}
+
+  Les mots binaires qui n'ont pas plus de deux lettres identiques
+  consécutives:
+  \begin{align*}
+    \mI &= \mE(\varepsilon)\ \sqcup\
+         (\mZ("0")\times\mA_0)\ \sqcup\ (\mZ("1")\times\mA_1)\\
+    \mA_0 &= \mE(\varepsilon)\ \sqcup\
+         (\mZ("0")\times\mB_0)\ \sqcup\ (\mZ("1")\times\mA_1)\\
+    \mB_0 &= \mE(\varepsilon)\ \sqcup\ (\mZ("1")\times\mA_1)\\
+    \mA_1 &= \mE(\varepsilon)\ \sqcup\
+         (\mZ("0")\times\mA_0)\ \sqcup\ (\mZ("1")\times\mB_1)\\
+    \mB_1 &= \mE(\varepsilon)\ \sqcup\ (\mZ("0")\times\mA_0)\\
+  \end{align*}
+\end{frame}
+
+
+\begin{frame}{Exemples: Codage d'un automate fini}
+
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=1.5cm,
+                    semithick]
+  \tikzstyle{every state}=[inner sep=1pt, minimum size=6mm]
+
+  \node[initial,state] (I)                     {$\mI$};
+  \node[state]         (A0) [above right of=I] {$\mA_0$};
+  \node[state]         (B0) [right of=A0]      {$\mB_0$};
+  \node[state]         (A1) [below right of=I] {$\mA_1$};
+  \node[state]         (B1) [right of=A1]      {$\mB_1$};
+  \path (I) edge node {0} (A0)
+            edge node [below] {1} (A1)
+        (A0) edge node {0} (B0)
+             edge [bend left] node {1} (A1)
+        (A1) edge node {0} (A0)
+             edge node [below] {1} (B1)
+        (B0) edge [bend left] node [below] {1} (A1)
+        (B1) edge [bend right] node [above] {0} (A0)
+  ;
+\end{tikzpicture}
+
+Plus simple, on inclus la lettre dans l'état:
+  \begin{align*}
+    \mI &= \mE(\varepsilon)\ \sqcup\ \mA_0\ \sqcup\ \mA_1\\
+    \mA_0 &= \mZ("0") \times (\mE(\varepsilon)\ \sqcup\ \mB_0 \sqcup\ \mA_1)\\
+    \mB_0 &= \mZ("0") \times (\mE(\varepsilon)\ \sqcup\ \mA_1)\\
+    \mA_1 &= \mZ("1") \times (\mE(\varepsilon)\ \sqcup\ \mB_1 \sqcup\ \mA_0)\\
+    \mB_1 &= \mZ("1") \times (\mE(\varepsilon)\ \sqcup\ \mA_0)\\
+  \end{align*}
 \end{frame}
 
 \end{document}
