@@ -10,6 +10,7 @@ Logiciel](http://www.u-psud.fr/fr/formations/diplomes/masters/informatique/parco
 * Le [chapitre](https://github.com/hivert/CombiFIIL/raw/master/Cours/00-present.pdf) d'introduction
 * Les notes de cours du chapitre 1 : [Algorithmes combinatoires](https://github.com/hivert/CombiFIIL/raw/master/Cours/01-combgen.pdf)
 * Les notes de cours du chapitre 2 : [Grammaires de descriptions d'objets](https://github.com/hivert/CombiFIIL/raw/master/Cours/02-gram.pdf)
+* Les notes de cours du chapitre 3 : [Code de Gray combinatoires](https://github.com/hivert/CombiFIIL/raw/master/Cours/03-Gray.pdf)
 
 
 * Les [:file_folder: programmes](https://github.com/hivert/CombiFIIL/tree/master/Progs) écrits en cours
