@@ -11,7 +11,6 @@
 
 \def\opstyle#1{\ensuremath{\operatorname{#1}}}
 
-
 \title[Codes de Gray combinatoires]%
 {\bf Codes de Gray}
 \author{\textbf{\Large Florent Hivert}\\[5mm]
@@ -35,6 +34,10 @@
 \newcommand{\Perm}{\opstyle{Perm}}
 \newcommand{\Union}{\opstyle{Union}}
 \newcommand{\Prod}{\opstyle{Prod}}
+
+\newcommand{\Pos}{\opstyle{Pos}}
+\newcommand{\Bin}{\opstyle{Bin}}
+\newcommand{\Gray}{\opstyle{Gray}}
 
 \newcommand{\mA}{\mathcal{A}}
 \newcommand{\mB}{\mathcal{B}}
@@ -142,12 +145,32 @@
   \end{NOTE}
 \end{frame}
 
+
 \begin{frame}{Passage d'une liste de bits à la suivante en temps constant}
 
 Idée: noter la position du prochain zéro:
+\begin{NOTE}
+  \[ \Pos_i :=
+  \begin{cases}
+    i & \text{si $b_i=0$ ou $b_{i-1}=1$ } \\
+    \min\{k \mid b_k = 0 \text{ et } k > i\} & \text{si $b_i=1$ et $b_{i-1}=0$ } \\
+  \end{cases}
+  \]
+\end{NOTE}
+\[\begin{array}{c|cccccccc}
+i      &  7 & 6 & 5 & 4 & 3 & 2 & 1 & 0 \\\hline
+b_i    &  1 & 0 & 1 & 1 & 1 & 0 & 1 & 0 \\
+\Pos_i &  8 & 6 & 5 & 4 & 6 & 2 & 2 & 0 \\
+\end{array}\]
+\end{frame}
 
+\begin{frame}{Passage d'une liste de bits à la suivante en temps constant}
+
+\begin{NOTE}
+  D'un nombre au suivant, au plus trois valeurs du tableau $\Pos$ changent.
+\end{NOTE}
 \[\begin{array}{ccccc}
-n & \text{bin} & \text{pos}  &  \text{pos}_0 & \text{Gray} \\\hline
+n & \Bin & \Pos  &  \Pos_0 & \Gray \\\hline
 0 & 000 & 210 & 0 & 000\\
 1 & 001 & 211 & 1 & 001\\
 2 & 010 & 220 & 0 & 011\\
