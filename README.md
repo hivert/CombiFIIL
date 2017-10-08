@@ -15,6 +15,7 @@ Logiciel](http://www.u-psud.fr/fr/formations/diplomes/masters/informatique/parco
 
 * Les [:file_folder: programmes](https://github.com/hivert/CombiFIIL/tree/master/Progs) écrits en cours
 * Les [:file_folder: sujets et programmes](https://github.com/hivert/CombiFIIL/tree/master/TP) pour les travaux pratiques
+* Le [sujet du projet](https://github.com/hivert/CombiFIIL/raw/master/SujetProjet/projet.pdf)
 
 ## Livres de référence
 
