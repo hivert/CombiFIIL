@@ -1,0 +1,309 @@
+% Macros communes aux TD et TP.
+%
+\RequirePackage{epsf} % pour le logo de mlv
+\RequirePackage{graphics} % pour le logo de mlv
+\RequirePackage{pifont,euscript} % pour les corrections
+\RequirePackage{amssymb}
+\RequirePackage{rotating} % pour les corrections
+\usepackage{amsmath}
+%\usepackage{eclbip}
+
+%
+\newtheorem{exemple}{Exemple}[section]
+\newtheorem{theoreme}[exemple]{Theor\`eme}
+\newtheorem{corollaire}[exemple]{Corollaire}
+\newtheorem{definition}[exemple]{D\'efinition}
+\newtheorem{proposition}[exemple]{Proposition}
+\newtheorem{algorithme}[exemple]{Algorithme}
+\newtheorem{lemme}[exemple]{Lemme}
+\newtheorem{conjecture}[exemple]{Conjecture}
+\newtheorem{notation}[exemple]{Notation}
+\newtheorem{remarque}[exemple]{Remarque}
+% pour les foonotes. -> on les parenthese.
+\def\thefootnote{(\arabic{footnote})}
+%
+% une page blanche
+\newcommand{\whitepage}{\newpage\hbox{\space}\newpage}
+%
+%
+%% quelques symboles
+%
+%% car. de metafont
+%%%%%%%%%%%%%%%%%%%
+\font\manual=manfnt % font used for the METAFONT logo, etc.
+\def\barble{{\manual\char1}}
+\def\fulltriangleright{{\manual\char120}} %
+\def\fulltriangleup{{\manual\char54}} %
+\def\fulltriangledown{{\manual\char55}}
+\def\littlecube{{\manual\char28}}
+\def\prettystar{{\manual\char30}}
+\def\littlecircles{{\manual\char36}}
+\def\littlelosanges{{\manual\char37}}
+\def\littlecloud{{\manual\char38}}
+\def\ellipsoid{{\manual\char88}}
+\def\zip{{\manual\char121}} % -/\/->
+\def\dbendright{{\manual\char126}}
+\def\dbendleft{{\manual\char127}}
+\def\question{\noindent\llap{\ding{90}\ding{212}}{\kern1pc}}
+
+% Permet de remplir un espace autant de fois que necessaire avec une boite de
+% taille #1 contenant l'argument #2.
+\def\leaderfill#1#2{\leaders\hbox to #1{\hss{#2}\hss}\hfill}
+
+%
+%% nouveaux environnements
+%
+% exercice simple
+%%%%%%%%%%%%%%%%%
+\newcounter{exo_count}
+\def\exoname{Exercice}
+\newenvironment{exercice}%
+{\bigbreak\refstepcounter{exo_count}%
+\vspace{0.3cm}%
+\begin{sloppypar}\noindent{\fulltriangleright\kern 2pt%
+\bf\exoname~\arabic{exo_count}.}% \sl%
+}%
+{\end{sloppypar}%
+}
+%
+% exercice un peu plus difficile
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newenvironment{Exercice}%
+{\bigbreak\refstepcounter{exo_count}%
+\vspace{0.3cm}%
+\begin{sloppypar}\noindent\hangindent 1.3cm\hangafter=-2\ignorespaces%
+{\bf \llap{\hbox to 1.3cm{\dbendleft\hfill\fulltriangleright\kern 2pt}}%
+\exoname~\arabic{exo_count}.}% \sl%
+}%
+{\end{sloppypar}%
+}
+%
+% exercice encore un peu plus difficile
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newenvironment{EXercice}%
+{\bigbreak\refstepcounter{exo_count}%
+\vspace{0.3cm}%
+\begin{sloppypar}\noindent\hangindent 1.3cm\hangafter=-2\ignorespaces%
+{\bf \llap{\hbox to 1.3cm{\dbendleft\kern1pt\dbendleft\hfill\hfill%
+\fulltriangleright\kern 2pt}}%
+\exoname~\arabic{exo_count}.}% \sl%
+}%
+{\end{sloppypar}%
+}
+%
+% environnement correction
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newbox\debutcor
+\newbox\fincor
+\def\setcorboxes#1{
+  \setbox\debutcor=\hbox to #1{%
+      \Large\ding{33}\small\leaders\hbox to .6em{\hfill\rule{2pt}{.8pt}}\hss}%
+  \setbox\fincor=\hbox{\begin{turn}{180}\copy\debutcor\end{turn}}%
+  }
+
+\newif\ifCORRECTION
+\CORRECTIONfalse
+
+\def\corrname{correction}
+\def\correction{%
+  \ifCORRECTION
+  \par\bigbreak
+  \typeout{Warning: correction ex.\arabic{exo_count} included}
+  \setcorboxes{\linewidth}
+  \noindent\ \kern-1ex\copy\debutcor\par\nobreak
+  \bgroup\normalfont\small\noindent\ignorespaces%
+  \else
+  \typeout{Correction ex.\arabic{exo_count} ignored}
+  \setbox0=\vbox\bgroup\small\noindent\ignorespaces%
+  \fi
+}
+\def\endcorrection{%
+  \egroup\par
+  \ifCORRECTION
+  \vspace*{-.5em}
+  \nobreak\noindent\copy\fincor\bigbreak
+  \par\ignorespaces\noindent%
+  \fi
+}
+
+% correction a inserer au milieu du texte
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\def\corr#1{\ifCORRECTION#1\fi}
+
+% ligne libre pour une reponse
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\def\answer{\ifCORRECTION\else\par\noindent\leaderfill{4pt}{.}\ \fi}
+
+%% Quelques noms de logiciels et autres.
+\def\C{{\it C\/}}
+\def\pascal{{\it Pascal\/}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Definition des formats, redefinition de maketitle %
+% inclusion de la numerotation et definition des    %
+% resume du contenu, etc.                           %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Format de page
+%%%%%%%%%%%%%%%%
+%
+\global\setlength{\unitlength}{0.1cm}
+%
+\global\setlength{\topmargin}{-1.5cm}
+\global\setlength{\footskip}{2cm}
+\global\setlength{\headheight}{1.5cm}
+\global\setlength{\headsep}{0.3cm}
+\global\setlength{\textheight}{21.5cm}
+\global\setlength{\oddsidemargin}{0.5cm}
+\global\setlength{\evensidemargin}{0.5cm}
+\global\setlength{\marginparwidth}{1.5cm}
+\global\setlength{\textwidth}{15.5cm}
+%
+\global\setlength{\parskip}{0.1cm}
+%
+%
+%%
+%%% MACROS
+%%
+%
+% Initialisations TRAVAUX PRATIQUES/DIRIGES
+%
+% TD ou TP ?
+%%%%%%%%%%%%
+\newif\ifCORRECTION     % correction
+\CORRECTIONfalse        % par defaut: ce n'est pas une correction
+\newif\ifinterro        % interro
+\interrofalse           % Par defaut, c'est un TD
+\newif\ifexam           % examen
+\examfalse              % Par defaut, c'est un TD
+\newif\ifTP             % TP
+\TPfalse                % Par defaut, c'est un TD
+\newif\ifTD             % projet
+\TDfalse                % Par defaut, c'est un TD
+\newif\ifprojet         % projet
+\projetfalse            % Par defaut, c'est un TD
+\newif\ifstage		% stage
+\stagefalse             % Par defaut, c'est un TD
+\newif\ifdevoir		% devoir
+\devoirfalse            % Par defaut, c'est un TD
+%
+\newif\ifnameinsert       % Pour mettre une boite nom/prenom en en-tete
+\nameinsertfalse        % Par defaut, pas de boite
+%
+\newcommand{\WORKname}{\ifTP Travaux Pratiques%
+                \else\ifinterro Interrogation%
+                \else\ifexam Examen final%
+                \else\ifprojet Projet%
+                \else\ifstage Stage%
+                \else\ifTD Travaux Dirig\'es
+                \else\ifdevoir Devoir 
+	 	\else{ }\fi\fi\fi\fi\fi\fi\fi}
+\newcommand{\workname}{\ifTP TP
+                        \else\ifinterro interro
+                             \else\ifexam examen
+                                  \else\ifprojet projet
+                                       \else\ifstage stage
+                                            \else\ifdevoir devoir
+                                                 \else\ifTD TD
+                                                      \else{ }
+                                                      \fi
+                                                 \fi
+                                            \fi
+                                       \fi
+                                  \fi
+                             \fi
+                        \fi}
+\newcounter{WORKnumber}
+\setcounter{WORKnumber}{0}
+%
+% Cours en question. Ex: Cours d'Informatique de Deuxi\`eme Ann\'ee
+% Groupe en question. Ex: Deug SSM M3-MI
+%
+\def\groupname{}        % Par defaut
+\def\coursename{}       % Par defaut
+\def\themename{}        % Par defaut
+\def\group#1{\gdef\groupname{---#1---}}
+\def\course#1{\gdef\coursename{#1}}
+\newif\ifTHEME
+\THEMEfalse
+\def\theme#1{\global\THEMEtrue\gdef\themename{#1}}
+%
+%
+%
+\def\interro#1{
+        \global\interrotrue
+        \global\examfalse
+	\global\projetfalse
+	\global\devoirfalse
+        \global\TPfalse         %\TD{d'algorithmique}
+        \global\stagefalse
+	\global\TDfalse
+        \mytitle{#1}}
+\def\examen#1{
+        \global\interrofalse
+        \global\examtrue
+	\global\projetfalse
+	\global\devoirfalse
+        \global\TPfalse         %\TD{d'algorithmique}
+        \global\stagefalse
+	\global\TDfalse
+        \mytitle{#1}}
+\def\TD#1{
+        \global\interrofalse
+        \global\examfalse
+	\global\projetfalse
+	\global\devoirfalse
+        \global\TPfalse         %\TD{d'algorithmique}
+        \global\stagefalse
+	\global\TDtrue
+        \mytitle{#1}}
+\def\TP#1{
+        \global\interrofalse
+        \global\examfalse
+	\global\projetfalse
+	\global\devoirfalse
+        \global\TPtrue         %\TD{d'algorithmique}
+        \global\stagefalse
+	\global\TDfalse
+        \mytitle{#1}}
+\def\stage#1{
+        \global\interrofalse
+        \global\examfalse
+	\global\projetfalse
+	\global\devoirfalse
+        \global\TPfalse         %\TD{d'algorithmique}
+        \global\stagetrue
+	\global\TDfalse
+        \mytitle{#1}}
+
+\def\projet#1{
+        \global\interrofalse
+        \global\examfalse
+        \global\devoirfalse
+	\global\projettrue
+        \global\TPfalse         %\TD{d'algorithmique}
+        \global\stagefalse
+	\global\TDfalse
+        \mytitle{#1}}
+
+\def\devoir#1{
+        \global\interrofalse
+        \global\examfalse
+        \global\devoirtrue
+        \global\projetfalse
+        \global\TPfalse         %\devoir{d'algorithmique}
+        \global\stagefalse
+        \global\TDfalse
+        \mytitle{#1}}
+
+%% Inclusion logo MLV
+%%%%%%%%%%%%%%%%%%%%%
+\newif\ifUMLVLOGO
+\newif\ifROUENLOGO
+\newif\ifMONGELOGO
+\newif\ifESIEELOGO
+\newif\ifUPSLOGO
+\ROUENLOGOfalse
+\UMLVLOGOfalse
+\MONGELOGOfalse
+\ESIEELOGOfalse
+\UPSLOGOtrue

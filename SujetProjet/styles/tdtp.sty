@@ -1,0 +1,69 @@
+\input styles/tdtpcommon.sty
+
+\def\mytitle#1{\gdef\@title{\ifCORRECTION Correction \workname
+	\else\WORKname\fi\ #1\ %
+        \ifnum\theWORKnumber=0\else
+        n${}^{\hbox{\small\rm o}}$\arabic{WORKnumber}%
+                                \refstepcounter{WORKnumber}\fi}}
+\mytitle{}              % Par defaut
+
+
+% Le titre
+%%%%%%%%%%
+\gdef\maketitle{\newpage
+	\message{\WORKname}
+	\message{\coursename}
+	\message{\groupname}
+ \vskip-2cm
+ \hbox {\ifUMLVLOGO\hspace*{-0.3cm}\epsffile{mlv.ps}%
+        \else\ifMONGELOGO\epsffile{monge_111x109.ps}%
+        \else\ifROUENLOGO\hspace*{-0.6cm}\epsfxsize = 3cm\hbox{\vbox{{\epsffile{LOGO-Rouen.ps}\vskip5mm}}}%
+        \else\ifESIEELOGO\hspace*{-0.0cm}\epsffile{LOGO-Esiee.ps}%
+        \else\ifUPSLOGO\vspace{-0.05cm}\includegraphics[width=3.4cm]{styles/logoweb_ups}%
+        \fi\fi\fi\fi%
+ \ifnameinsert\hskip4cm\raise1.2cm\hbox{%
+	\begin{minipage}{7cm}
+	\noindent Nom~:\par
+	\noindent Pr\'enom~:
+	\end{minipage}}\fi%
+ }
+ \begin{center}%                      
+  \ifUMLVLOGO\vspace*{-1.9cm}%
+               \hspace*{2.8cm}{\LARGE\bf \@title}\\%
+               \hspace*{2.8cm}{\large\bf\coursename}\\%
+               \hspace*{2.8cm}{\large\it\groupname\/}\\%
+               \par\vspace*{0.3cm}\hrule%
+  \else\ifMONGELOGO\vspace*{-2.5cm}%
+                   \hspace*{1cm}{\LARGE\bf \@title}\\%
+                   \hspace*{1cm}{\large\bf\coursename}\\%
+                   \hspace*{1cm}{\large\it\groupname\/}\\%
+                   \par\vspace*{0.7cm}\hrule%
+  \else\ifROUENLOGO\vspace*{-2.0cm}%
+                     \hspace*{3.2cm}{\LARGE\bf \@title}\\%
+                     \hspace*{3.2cm}{\large\bf\coursename}\\%
+                     \hspace*{3.2cm}{\large\it\groupname\/}\\%
+                     \par\vspace*{0.3cm}\hrule%
+  \else\ifESIEELOGO\vspace*{-2.0cm}%
+                   \hspace*{3.2cm}{\LARGE\bf \@title}\\%
+                   \hspace*{3.2cm}{\large\bf\coursename}\\%
+                   \hspace*{3.2cm}{\large\it\groupname\/}\\%
+                   \par\vspace*{0.3cm}\hrule%
+  \else\ifUPSLOGO\vspace*{-2.0cm}%
+                   \hspace*{3.2cm}{\LARGE\bf \@title}\\%
+                   \hspace*{3.2cm}{\large\bf\coursename}\\%
+                   \hspace*{3.2cm}{\large\it\groupname\/}\\%
+                   \par\vspace*{0.3cm}\hrule%
+  \fi\fi\fi\fi\fi%
+ \end{center}%
+ \par}
+ %\vskip 1em}
+
+% Le contenu
+%%%%%%%%%%%%
+\def\abstract{%
+%\par\vspace*{0.3cm}\hrule%
+\begin{center}
+\ifTHEME{\Large\bf\themename}\\[1em]\fi
+\begin{minipage}{13cm}\small}
+   
+\def\endabstract{\end{minipage}\end{center}\vspace*{1mm}\hrule \vspace{.5cm}}
