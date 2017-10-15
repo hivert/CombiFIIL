@@ -221,3 +221,8 @@ TSWLatexianTemp*
 
 # jupyte checkpoints
 .ipynb_checkpoints
+
+# exec file
+mots_binaires
+perm_descentes_algo
+perm_generation
