@@ -195,9 +195,9 @@ int main(int argc, char *argv[]) {
     if (argc > 2) {
         if (argc == 4 and string(argv[1]) == "-n")  {
             // Récupération du nombre de processeurs à utiliser et configuration de CLIK
-            string nproc = string(argv[2]);
+            string nprocstr = string(argv[2]);
             nproc = atoi(argv[2]);
-            if (__cilkrts_set_param("nworkers", nproc.c_str()) != __CILKRTS_SET_PARAM_SUCCESS) {
+            if (__cilkrts_set_param("nworkers", nprocstr.c_str()) != __CILKRTS_SET_PARAM_SUCCESS) {
                 cerr << "Failed to set the number of Cilk workers" << endl;
             }
         } else if( argc == 3 and string(argv[1]) == "-a") {
