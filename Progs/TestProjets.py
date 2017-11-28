@@ -65,6 +65,24 @@ Binom = {
     "NonEmpty": ProductRule("Prim", "Binom", lambda a,b: a+b)
 }
 
+Pas3 = {
+    "Pas3": UnionRule("Vide", "Cas"),
+    "Cas": UnionRule("A0", "A1"),
+    "Vide": EpsilonRule(""),
+    "Atom0": SingletonRule("0"),
+    "Atom1": SingletonRule("1"),
+    "A0": ProductRule("Atom0", "EB0A1", lambda a,b: a+b),
+    "EB0A1": UnionRule("Vide", "B0A1"),
+    "B0A1": UnionRule("B0", "A1"),
+    "A1": ProductRule("Atom1", "EB1A0", lambda a,b: a+b),
+    "EB1A0": UnionRule("Vide", "B1A0"),
+    "B1A0": UnionRule("B1", "A0"),
+    "B0": ProductRule("Atom0", "EA1", lambda a,b: a+b),
+    "EA1": UnionRule("Vide", "A1"),
+    "B1": ProductRule("Atom1", "EA0", lambda a,b: a+b),
+    "EA0": UnionRule("Vide", "A0"),
+}
+
 ## Grammar examples using sequence and other extensions
 
 Seq = {
