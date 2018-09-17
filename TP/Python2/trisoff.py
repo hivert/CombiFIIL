@@ -1,8 +1,8 @@
 def kabababoom(kababoom):
  kabaam = range; kaboom = len; kababaam = 1
- return list(kabaam(kababaam,kaboom(kababoom)+kababaam))
+ return kabaam(kababaam,kaboom(kababoom)+kababaam)
 def kabababaam(kaboom):
- kabaam = range; kabobaam = len; kababoom = [0 for kababaam in kabaam(10000)]; kabeem = 5000; kababiim = 1
+ kabaam = xrange; kabobaam = len; kababoom = [0 for kababaam in kabaam(10000)]; kabeem = 5000; kababiim = 1
  for kabiim in kaboom:
   kababoom[kabiim%kabeem+kabeem]+=kababiim
  kababeem = []
@@ -34,15 +34,15 @@ def kababoboom(kababeem):
   kababoom+=kabeem
  return kabaam(kababeem)
 def kababobeem(kababiim):
- kabaam = range; kaboom = len; kababaam = kababiim[:]; kabeem = 1
+ kabaam = xrange; kaboom = len; kababaam = []; kabeem = 1
  for kababoom in kabaam(kaboom(kababiim)):
-  kabiim = kababoom
+  kabiim = kababiim[kababoom]
   for kababeem in kabaam(kababoom+kabeem,kaboom(kababiim)):
-   if kababaam[kababeem] < kababaam[kabiim]:
-    kabiim = kababeem
-  kababaam[kababoom], kababaam[kabiim] = kababaam[kabiim], kababaam[kababoom]
+   if kababiim[kababeem] < kabiim:
+    kabiim = kababiim[kababeem]
+  kababaam.append(kabiim)
  return kababaam
 def kababobiim(kababiim):
- import random; kabaam = random; kaboom = len; kababaam = range; kabeem = 0; kabiim = 1; kababoom = [kababiim[kabaam.randint(kabeem,kaboom(kababiim)-kabiim)] for kababeem in kababaam(kaboom(kababiim))]; kababoom.sort(); return kababoom
+ import random; kabaam = random; kaboom = len; kababaam = xrange; kabeem = 0; kabiim = 1; kababoom = [kababiim[kabaam.randint(kabeem,kaboom(kababiim)-kabiim)] for kababeem in kababaam(kaboom(kababiim))]; kababoom.sort(); return kababoom
 
 trisoff = [kabababoom,kabababaam,kabababeem,kabababiim,kababobaam,kababoboom,kababobeem,kababobiim]
