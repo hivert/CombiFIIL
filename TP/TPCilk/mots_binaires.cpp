@@ -36,7 +36,7 @@ void motsbin_classique(int n, int cur, int i) {
     else{
         // Appels récursifs
         motsbin_classique(n, cur+1, i << 1); // on décale le mot d'un cran à gauche et on ajoute 0
-        motsbin_classique(n, cur+1, (i << 1) + 1); // on décale le mot d'un cra à droite et on ajoute 1
+        motsbin_classique(n, cur+1, (i << 1) + 1); // on décale le mot d'un cran à droite et on ajoute 1
     }
 }
 
