@@ -5,6 +5,8 @@
 % Date     : lun. oct.  2 14:09:41 CEST 2017
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \documentclass[11pt]{article}
+
+\usepackage[svgnames]{xcolor}
 \usepackage{styles/tdtp,array,amsmath}
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
@@ -14,7 +16,20 @@
 \usepackage{hyperref}
 \usepackage{listingsutf8}
 
-\lstset{inputencoding=utf8/latin1}
+
+\lstset{inputencoding=utf8/latin1,
+  language=python,
+%  numbers=left,
+  lineskip=-.2ex,
+  basicstyle={\ttfamily},
+  columns=fixed,
+  fontadjust=true,
+  basewidth={1.09ex},
+  showspaces=false, showstringspaces=false,
+  commentstyle=\color{DarkGreen},
+  keywordstyle=\color{DarkBlue},
+  stringstyle=\color{DarkBlue},
+}
 
 \newcommand\todo[1]{\textcolor{red}{ToDo: #1}}
 
@@ -65,7 +80,7 @@ Dans ce projet, nous allons construire et implémenter des grammaires pour
 décrire des objets \textbf{étiquetés}. Par rapport à ce que l'on a vu en
 cours, on ne parlera pas de l'ensemble des objets de taille $n$, mais de
 \textbf{l'ensemble des objets étiquetés par les éléments de $S$}. L'ensemble
-des étiquettes $S$ sera décrit par une \textbf{liste supposée trié et sans
+des étiquettes $S$ sera décrit par une \textbf{liste supposée triée et sans
   doublons}. Un objet décrit par la grammaire devra contenir \textbf{toutes
   les étiquettes une fois et une seule}. Avant de décrire les grammaires nous
 commençons par quelques exemples.
@@ -110,11 +125,11 @@ les façons de découper $S$ en sous ensemble.
 Par exemple, il y a 5 façons de partitionner l'ensemble $\lbrace 1,2,3 \rbrace$ :
 
 \begin{itemize}
-\item $\lbrace 1 \rbrace, \lbrace 2 \rbrace, \lbrace 3 \rbrace$
-\item $\lbrace 1,2 \rbrace, \lbrace 3 \rbrace$,
-\item $\lbrace 1,3 \rbrace, \lbrace 2 \rbrace$,
-\item $\lbrace 1 \rbrace, \lbrace 2,3 \rbrace$,
-\item $\lbrace 1,2,3 \rbrace$
+\item $\lbrace\lbrace 1 \rbrace, \lbrace 2 \rbrace, \lbrace 3 \rbrace\rbrace$
+\item $\lbrace\lbrace 1,2 \rbrace, \lbrace 3 \rbrace\rbrace$,
+\item $\lbrace\lbrace 1,3 \rbrace, \lbrace 2 \rbrace\rbrace$,
+\item $\lbrace\lbrace 1 \rbrace, \lbrace 2,3 \rbrace\rbrace$,
+\item $\lbrace\lbrace 1,2,3 \rbrace\rbrace$
 \end{itemize}
 
 \subsubsection{Arbres binaires}
@@ -726,8 +741,7 @@ grâce à la fonction de création stockée dans la classe.
 
 Pour calculer l'élément de taille $n$ et de rang $i$, on fait appel à la
 méthode \texttt{unrank}. Voici par exemple l'arbre dont les feuilles
-sont étiquetées par $[1,2,3,4,5,6]$ de rang 12.
-$12$.
+sont étiquetées par $[1,2,3,4,5,6]$ de rang $12$.
 \begin{verbatim}
 >>> TreeLabelLeaves["Tree"].unrank([1,2,3,4,5,6],12)
 (1, (2, (4, (3, (5, 6)))))
