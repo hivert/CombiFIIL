@@ -11,6 +11,10 @@
 \usepackage[francais]{babel}
 \usepackage{multicol}
 \usepackage{styles/tikz-uml}
+\usepackage{hyperref}
+\usepackage{listingsutf8}
+
+\lstset{inputencoding=utf8/latin1}
 
 \newcommand\todo[1]{\textcolor{red}{ToDo: #1}}
 
@@ -51,10 +55,11 @@
   d'implantations devront être expliqués. 
 \end{abstract}
 
-\section{Introduction : quelques exemples}
+\section{Grammaires étiquetées : Introduction et quelques exemples}
 %%%%%%%%%%%%%%%%%%
 
-\subsection{Sequences simples, triées, cycliques et zig-zag}
+\subsection{Objets étiquetés}
+
 
 Dans ce projet, nous allons construire et implémenter des grammaires pour
 décrire des objets \textbf{étiquetés}. Par rapport à ce que l'on a vu en
@@ -63,7 +68,11 @@ cours, on ne parlera pas de l'ensemble des objets de taille $n$, mais de
 des étiquettes $S$ sera décrit par une \textbf{liste supposée trié et sans
   doublons}. Un objet décrit par la grammaire devra contenir \textbf{toutes
   les étiquettes une fois et une seule}. Avant de décrire les grammaires nous
-commençons par quelques exemples:
+commençons par quelques exemples.
+
+\subsubsection{Séquences}
+\label{seq:sequences}
+
 \begin{enumerate}
 \item Séquences simples : les objets de ce type sont les listes contenants
   toutes les étiquettes. Ce sont donc les permutations de l'entrée $S$. Ainsi
@@ -92,119 +101,77 @@ ZigZag.list([1,2,3,4]) =
 \end{verbatim}
 \end{enumerate}
 
-\subsection{Les arbres binaires}
+\subsubsection{Partitions d'ensemble}
+\label{seq:set-partitions}
 
-Un \emph{arbre binaire étiqueté} est soit une feuille, soit un noeud avec une
-étiquette sur lequel on a greffé deux arbres binaires. Dans la suite
-de ce sujet, on suppose les arbres déjà implanté avec un constructeur
-\texttt{Node(e, l, r)} pour les noeuds et une constante \texttt{Leaf} pour les
-feuilles.
-\begin{verbatim}
-   >>> tr = Node(1, Leaf, Node(2, Leaf, Leaf))
-\end{verbatim}
-On peut ainsi décrire l'ensemble des arbres binaires par les définitions
-récursives suivantes:
+Pour un ensemble $S$ donné, les \emph{partitions d'ensemble} sont toutes
+les façons de découper $S$ en sous ensemble.
+
+Par exemple, il y a 5 façons de partitionner l'ensemble $\lbrace 1,2,3 \rbrace$ :
+
 \begin{itemize}
-\item l'ensemble \texttt{"Trees"} des arbres est la réunion disjointe (que
-  l'on notera en \Python{} par le constructeur \texttt{UnionRule}) de deux
-  ensembles : l'ensemble \texttt{"Nodes"} des noeuds et l'ensemble
-  \texttt{"Leaf"} des feuilles;
-\item l'ensemble \texttt{"Nodes"} des noeuds est obtenu en ajoutant une
-  étiquette à une paire d'arbres (c'est-à-dire un élément du produit cartésien
-  de l'ensemble des arbres avec lui même). On note \texttt{ProductRule} le
-  constructeur du produite cartésien. Le constructeur de l'ensemble singleton
-  formé d'une étiquette est noté \texttt{SingletonRule} 
-\item il n'y a qu'un seul arbre possible constitué d'une feuille. C'est le
-  un objet vide (constructeur \texttt{EpsilonRule}) \texttt{"Leaf"}.
+\item $\lbrace 1 \rbrace, \lbrace 2 \rbrace, \lbrace 3 \rbrace$
+\item $\lbrace 1,2 \rbrace, \lbrace 3 \rbrace$,
+\item $\lbrace 1,3 \rbrace, \lbrace 2 \rbrace$,
+\item $\lbrace 1 \rbrace, \lbrace 2,3 \rbrace$,
+\item $\lbrace 1,2,3 \rbrace$
 \end{itemize}
-Une telle définition est appelée \emph{grammaire}. On écrira en
-\Python\ la grammaire des arbres de la manière suivante:
+
+\subsubsection{Arbres binaires}
+\label{seq:binary-trees}
+
+Les grammaires étiquetées permettent non seulement d'obtenir des séquences de nombre
+mais aussi des objets plus complexes tels que les arbres binaires.
+
+Il y a deux façons classiques d'étiqueter les arbres binaires :
+\begin{itemize}
+\item étiquetage des feuilles;
+\item étiquetage des noeuds internes.
+\end{itemize}
+
+Dans le fichier {\tt LabelledBinaryTree.py} vous trouverez une classe python très proche
+de celle vue en TP qui permet de représenter des arbres binaires étiquetés (sur les noeuds
+ou les feuilles).
+
+Par exemple, on peut créer les arbres suivants:
+
+\includegraphics[scale=.5]{images/arbre_etiquete1.pdf}
+
 \begin{verbatim}
-    ifdun = lambda x : x
-    treeGram = {"Tree" : UnionRule("Node", "Leaf"),
-                "Node" : ProductRule("Label", "Pair",
-                                     lambda (l, p) : Node(l, p[0], p[1])),
-                "Pair" : ProductRule("Tree", "Tree", idfun),
-                "Label" : SingletonRule(idfun),
-                "Leaf" : EpsilonRule(Leaf)}
-\end{verbatim}
-Le but de ce projet est d'implanter un algorithme permettant de compter,
-d'engendrer automatiquement la liste ainsi que de tirer au hasard un des
-objets décrit par une grammaire de ce type. Il y a 30 arbres
-possibles avec les étiqettes \verb|'a'|, \verb|'b'|, et \verb|'c'|:
-\begin{verbatim}
->>> treeGram["Tree"].list(range(3))
-30
-\end{verbatim}
-En voici
-quelques un:
-\begin{verbatim}
->>> treeGram["Tree"].list(range(3))
-[Node(0, Leaf, Node(1, Leaf, Node(2, Leaf, Leaf))),
- Node(0, Leaf, Node(1, Node(2, Leaf, Leaf), Leaf)),
- Node(0, Leaf, Node(2, Leaf, Node(1, Leaf, Leaf))),
- [...]
- Node(2, Leaf, Node(0, Leaf, Node(1, Leaf, Leaf))),
- Node(2, Leaf, Node(0, Node(1, Leaf, Leaf), Leaf)),
- [...]
- Node(2, Node(0, Leaf, Node(1, Leaf, Leaf)), Leaf),
- Node(2, Node(0, Node(1, Leaf, Leaf), Leaf), Leaf),
- Node(2, Node(1, Leaf, Node(0, Leaf, Leaf)), Leaf),
- Node(2, Node(1, Node(0, Leaf, Leaf), Leaf), Leaf)]
+>>> t = Node(Leaf(), Node(Node(Leaf(),Leaf(),"c"), Leaf(), "a"), "b")
+>>> t
+b(leaf, a(c(leaf, leaf), leaf))
 \end{verbatim}
 
-\subsection{Listes simples et triées}
+\includegraphics[scale=.5]{images/arbre_etiquete2.pdf}
 
-Pour que l'on obtienne un comportement intéressant avec les étiquettes, il
-faut pouvoir contrôler la leurs provenance. On va donc distinguer trois
-produits. Dans les exemples suivant, on suppose que \texttt{A} et \texttt{B}
-sont des séquences ordonnées \texttt{SortedSeq}.
-\begin{enumerate}
-\item le \textbf{produit cartésien ordinaire} noté \texttt{Prod}. Les
-  étiquettes se répartissent alors de toutes les manières possibles. Ainsi,
-  pour la règle \texttt{C = Prod('A', 'B', f)}, On a
-  \texttt{C.list([1, 2, 3)} sont
 \begin{verbatim}
-C.list([1, 2, 3]) =
-        f([], [1,2,3]), f([1], [2,3]), f([2], [1,3]), f([3], [1,2]),
-        f([1,2], [3]),  f([1,3], [2]), f([2,3], [1]), f([1,2,3], [])
-\end{verbatim}
-\item le \textbf{produit cartésien boxed} noté \texttt{BoxProd}. La plus petite
-  étiquette est forcément à gauche. Ainsi,
-\begin{verbatim}
-C.list([1, 2, 3]) =
-        f([], [1,2,3]), f([1], [2,3]), f([1,2], [3]), f([1,2,3], [])
-\end{verbatim}
-\item le \textbf{produit cartésien ordonné} noté \texttt{OrdProd}. Les
-  étiquettes se répartissent en mettant les plus petites à gauches et les plus
-  grandes à droite. Ainsi,
-\begin{verbatim}
-C.list([1, 2, 3]) =
-        f([1], [2,3]), f([1,2], [3]), f([1,3], [2]), f([1,2,3], [])
-\end{verbatim}
-\end{enumerate}
-Avec ces définition, on peut donc définir les arbres binaires croissants par
-la grammaire:
-\begin{verbatim}
-    treeGram = {"Tree" : UnionRule("Node", "Leaf"),
-                "Node" : BoxProdRule("Label", "Pair",
-                                     lambda (l, p) : Node(l, p[0], p[1])),
-                "Label" : SingletonRule(idfun),
-                "Pair" : ProductRule("Tree", "Tree", idfun),
-                "Leaf" : EpsilonRule(Leaf)}
-\end{verbatim}
-Les arbres binaires de recherche sont à leur tour défini par la grammaire:
-\begin{verbatim}
-    treeGram = {"Tree" : UnionRule("Node", "Leaf"),
-                "Node" : OrdProdRule("Tree", "PairLSAD",
-                                     lambda (l, p) : Node(p[0], l, p[1])),
-                "Label" : SingletonRule(idfun),
-                "PairLSAD" : OrdProdRule("Label", "Tree", idfun),
-                "Leaf" : EpsilonRule(Leaf)}
+>>> t = Node(Leaf("c"), Node(Node(Leaf("a"),Leaf("b")), Leaf("d")))
+>>> t
+>>> (c, ((a, b), d))
 \end{verbatim}
 
+Les grammaires étiquetées nous permettront par exemple d'engendrer :
 
-\section{Définitions formelles}
+\begin{itemize}
+\item L'ensemble des arbres dont les noeuds sont étiquetés par un ensemble donné.
+\item L'ensemble des arbres dont les feuilles sont étiquetées par un ensemble donné.
+\item Les arbres croissants : l'ensemble des arbres dont les noeuds sont étiquetés par 
+un ensemble ordonné donné tels que l'étiquette d'un noeud soit toujours inférieure 
+aux étiquettes de ses fils.
+\item Les arbres binaires de recherche : l'ensemble des arbres dont les noeuds sont étiquetés par 
+un ensemble ordonné donné tels que l'étiquette d'un noeud soit toujours supérieure
+à toutes les étiquettes de son fils gauche et inférieure à toutes les étiquettes
+de son fils droit.
+\end{itemize}
+
+\begin{tabular}{l|l}
+\includegraphics[scale=.5]{images/arbre_croissant.pdf} & 
+\includegraphics[scale=.5]{images/abr.pdf} \\
+Exemple arbre croissant & Exemple ABR
+\end{tabular}
+
+\subsection{Définitions formelles des grammaires étiquetées}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 Une grammaire décrit récursivement un ensemble d'objets. Elle est constituée
@@ -214,19 +181,17 @@ non-terminal de la grammaire.  \medskip
 
 Une \emph{règle de grammaire} $R$ décrit un ensemble qui est
 \begin{itemize}
-\item[$\bullet$] soit un singleton dont le seul élément est un objet
+\item soit un singleton dont le seul élément est un objet
   \emph{atomique} construit en utilisant une seule étiquette.
-\item[$\bullet$] soit un ensemble dont le seul élément est un objet
-  \emph{vide} sans étiquette (par exemple la chaîne vide).
-\item[$\bullet$] soit l'\emph{union de deux ensembles} décrit par deux
+\item soit un ensemble dont le seul élément est un objet
+  \emph{vide} sans étiquette (par exemple la chaîne vide ou l'arbre vide).
+\item soit l'\emph{union de deux ensembles} décrit par deux
   non-terminaux $N_1$ et $N_2$;
-\item[$\bullet$] soit en bijection avec l'une des variantes du \emph{produit
-    cartésien de deux ensembles} décrit par deux non-terminaux $N_1$ et $N_2$;
+\item soit une variante du \emph{produit
+    cartésien de deux ensembles}\footnote{les variantes possibles sont décrites un peu plus tard} 
+    décrit par deux non-terminaux $N_1$ et $N_2$;
   L'ensemble est alors construit à partir des paires d'éléments $(e_1, e_2)
-  \in N_1 \times N_2$. Dans ce cas, il faut de plus donner à \Python\ la
-  bijection qui construit l'objet correspondant à la paire $(e_1, e_2)$
-  (concaténation pour les chaînes de caractères où constructeur \texttt{Node}
-  pour les arbres).
+  \in N_1 \times N_2$.
 \end{itemize}
 \medskip
 
@@ -237,40 +202,236 @@ donc la somme des poids de $e_1$ et de $e_2$.
 À chaque non-terminal on associe la taille du plus petit objet qui en dérive.
 Cette taille est appelé \emph{valuation} du non-terminal.
 
+Le but du projet est de permettre à un utilisateur de décrire une grammaire
+en python sous la forme d'un dictionnaire associant une règle à chaque 
+non-terminal et calculant : 
+\begin{itemize}
+\item Le nombre d'objet d'une certaine taille décrits par la grammaire (méthode {\tt count})
+\item La liste des objets étiquetés par une liste d'étiquettes donnée (méthode {\tt list})
+\item Un objet identifié par son rang dans la liste (méthode {\tt unrank})
+\item Le rang d'un objet donné (méthode {\tt rank})
+\end{itemize}
+
+\subsection{Quelques exemples de base (mais indispensables !)}
+
+Commençons par des exemples triviaux de grammaires. Nous vous présentons 
+à chaque fois la description de la grammaire et son implantation python telle
+qu'elle devra fonctionner lorsque vous aurez réalisé le projet. 
+
+Tout le code python de déclaration des grammaires avec les tests associés se trouve
+dans le fichier {\tt tests.py}.
+
+\subsubsection{La Grammaire singleton}
+
+Voici une grammaire contenant une unique règle de type {\tt Singleton}. Cette 
+grammaire ne peut engendrer que des objets de taille 1. 
+
+\begin{tabular}{lll}
+\textbf{Singl} & $\rightarrow$ & Singleton
+\end{tabular}
+
+En python, on l'implantera de cette façon :
+
+\lstinputlisting[firstline=10,lastline=12]{code/tests.py}
+
+Ici, l'argument {\tt lambda x:x} est donné pour initialiser l'objet {\tt SingletonRule}.
+Cela correspond à la fonction qui sera utilisée pour concrètement fabriquer l'objet 
+combinatoire associé à une étiquette. Dans le cas de cette grammaire, c'est une fonction triviale qui prend l'étiquette
+(typiquement une chaîne de caractère ou un entier) en argument et la renvoie directement. 
+On verra dans certains cas que cette fonction peut être plus complexe, par exemple dans le
+cas des arbres binaires.
+
+Voilà quelques exemples d'utilisation de cette grammaire et des résultats attendus pour les méthodes 
+{\tt count} et {\tt list} que vous devrez implanter. La description précise de ces méthodes et des 
+algorithmes associés est donnée en TODO
+
+\lstinputlisting[firstline=14,lastline=24]{code/tests.py}
+
+\subsubsection{La Grammaire Epsilon}
+
+Voici une grammaire contenant une unique règle de type {\tt Epsilon}. Cette 
+grammaire n'engendre qu'un objet unique de taille 0. Dans l'exemple suivant
+c'est la chaîne vide.
+
+\begin{tabular}{lll}
+\textbf{Empty} & $\rightarrow$ & Epsilon(mot vide)
+\end{tabular}
+
+En python, on l'implantera de cette façon :
+
+\lstinputlisting[firstline=28,lastline=30]{code/tests.py}
+
+L'objet {\tt Epsilon} prend en paramètre l'objet de taille 0 qu'il crée. Voilà quelques exemples 
+d'utilisation de cette grammaire et des résultats attendus pour les méthodes 
+{\tt count} et {\tt list} que vous devrez implanter.
+
+\lstinputlisting[firstline=32,lastline=42]{code/tests.py}
+
+\subsubsection{Les permutations de taille 2}
+
+Voilà un premier exemple de grammaire à 2 règles qui engendre les permutations de taille~2.
+
+\begin{tabular}{lll}
+\textbf{Perms} & $\rightarrow$ & Produit(\textbf{Letter}, \textbf{Letter}) \\
+\textbf{Letter} & $\rightarrow$ & Singleton
+\end{tabular}
+
+En python, on l'implantera de cette façon :
+
+\lstinputlisting[firstline=48,lastline=51]{code/tests.py}
+
+Remarquez que l'objet {\tt ProductRule} prend en paramètre une fonction qui fabrique un
+objet combinatoire à partir de deux objets donnés. Voilà quelques exemples 
+d'utilisation de cette grammaire et des méthodes {\tt count} et {\tt list} que vous devrez implanter.
+
+\lstinputlisting[firstline=53,lastline=64]{code/tests.py}
+
+\subsubsection{Les permutations de toute taille}
+
+Voilà le premier exemple de grammaire intéressante, c'est-à-dire qui engendre
+une famille d'objet quelle que soit la taille. Cela nécessite une définition récursive.
+
+\begin{tabular}{lll}
+\textbf{Perms} & $\rightarrow$ & Union(\textbf{Empty}, \textbf{NonEmpty}) \\
+\textbf{NonEmpty} & $\rightarrow$ & Product(\textbf{Letter}, \textbf{Perms}) \\
+\textbf{Empty} & $\rightarrow$ & Epsilon(permutation vide) \\
+\textbf{Letter} & $\rightarrow$ & Singleton
+\end{tabular}
+
+En python, on l'implantera de cette façon :
+
+\lstinputlisting[firstline=68,lastline=90]{code/tests.py}
+
+\subsubsection{Arbres binaires}
+
+Voici pour commencer la grammaire qui engendre les arbres binaires
+dont les \textbf{feuilles} sont étiquetées.
+
+\begin{tabular}{lll}
+\textbf{Tree} & $\rightarrow$ & Union(\textbf{Node}, \textbf{Leaf}) \\
+\textbf{Node} & $\rightarrow$ & Product(\textbf{Tree}, \textbf{Tree}) \\
+\textbf{Leaf} & $\rightarrow$ & Singleton
+\end{tabular}
+
+Ce qui en python, s'implante par
+
+\lstinputlisting[firstline=148,lastline=152]{code/tests.py}
+
+Remarquez que les objets {\tt Singleton} et {\tt ProductRule} prennent 
+directement les fonctions {\tt Leaf} et {\tt Node} en paramètre pour
+la création des objets. Voilà les résultats attendus. Notez que
+la taille de l'arbre est ici le nombre de feuilles.
+
+\lstinputlisting[firstline=156,lastline=165]{code/tests.py}
+
+Voici l'implantation  d'une grammaire pour implanter les arbres dont les noeuds internes 
+sont étiquetés. Cette fois la taille de l'arbre est donnée par le nombre
+de noeuds internes et les feuilles sont dont de taille 0.
+
+\lstinputlisting[firstline=169,lastline=185]{code/tests.py}
+
+
+\subsection{Les différents produits}
+\label{seq:product}
+
+Pour que l'on obtienne un comportement intéressant avec les étiquettes, il
+faut pouvoir contrôler la leurs provenance. On va donc distinguer trois
+produits.
+\begin{enumerate}
+\item le \textbf{produit cartésien ordinaire} noté \texttt{Product}. Les
+  étiquettes se répartissent alors de toutes les manières possibles. Ainsi,
+  la règle \textbf{C} $\rightarrow$ Product(\textbf{A}, \textbf{B})
+  sur les étiquettes $[1,2,3]$ engendre l'union des ensembles suivant
+\begin{align*}
+&\textbf{A}([]) \times \textbf{B}([1,2,3]) \\
+ &\textbf{A}([1]) \times \textbf{B}([2,3]) \\ 
+ &\textbf{A}([2]) \times \textbf{B}([1,3]) \\ 
+ &\textbf{A}([3]) \times \textbf{B}([1,2]) \\ 
+ &\textbf{A}([1,2]) \times \textbf{B}([3]) \\ 
+ &\textbf{A}([1,3]) \times \textbf{B}([2]) \\ 
+ &\textbf{A}([2,3]) \times \textbf{B}([1]) \\ 
+ &\textbf{A}([1,2,3]) \times \textbf{B}([])
+\end{align*}
+
+\item le \textbf{produit cartésien boxed} noté \texttt{BoxProduct}. 
+L'ensemble gauche contient forcément la plus petite étiquette.
+Ainsi, la règle \textbf{C} $\rightarrow$ BoxProduct(\textbf{A}, \textbf{B})
+  sur les étiquettes $[1,2,3]$ engendre l'union des ensembles suivant
+\begin{align*}
+ &\textbf{A}([1]) \times \textbf{B}([2,3]) \\ 
+ &\textbf{A}([1,2]) \times \textbf{B}([3]) \\ 
+ &\textbf{A}([1,3]) \times \textbf{B}([2]) \\ 
+ &\textbf{A}([1,2,3]) \times \textbf{B}([])
+\end{align*}
+\item le \textbf{produit cartésien ordonné} noté \texttt{OrdProduct}. Les
+  étiquettes se répartissent en mettant les plus petites à gauches et les plus
+  grandes à droite. Ainsi, la règle \textbf{C} $\rightarrow$ OrdProduct(\textbf{A}, \textbf{B})
+  sur les étiquettes $[1,2,3]$ engendre l'union des ensembles suivant
+\begin{align*}
+&\textbf{A}([]) \times \textbf{B}([1,2,3]) \\
+ &\textbf{A}([1]) \times \textbf{B}([2,3]) \\ 
+ &\textbf{A}([1,2]) \times \textbf{B}([3]) \\ 
+ &\textbf{A}([1,2,3]) \times \textbf{B}([])
+\end{align*}
+\end{enumerate}
+Avec ces définitions, on peut par exemple définir l'ensemble {\tt SortedSeq} des séquences
+ordonnées (un seul objet par taille : la séquence ordonnée des étiquettes).
+
+\lstinputlisting[firstline=94,lastline=115]{code/tests.py}
+
+Et voici un exemple utilisant le {\tt BoxProduct}.
+
+\lstinputlisting[firstline=119,lastline=140]{code/tests.py}
+
+\subsection{Exercices}
+
+Donnez les grammaires engendrant les ensembles suivants. Vous donnerez 
+les descriptions formelles dans le rapports et proposerez aussi 
+des implantations python une fois le projet réalisé et testerez 
+les différentes méthodes. 
+
+\begin{enumerate}
+\item (niveau 1) La grammaire des \emph{séquences cycliques} décrites en Section~\ref{seq:sequences}. 
+La méthode {\tt count} sur les entiers de 0 à 5 doit vous donner \textbf{1, 1, 1, 2, 6, 24}.
+\item (niveau 1) La grammaire des arbres binaires dont les feuilles sont étiquetées dans l'ordre de gauche à droite.
+La méthode {\tt count} sur les entiers de 0 à 5 doit vous donner \textbf{0, 1, 1, 2, 5, 14}.
+\item (niveau 2) La grammaire des \emph{arbres binaires croissants} décrits en Section~\ref{seq:binary-trees}.
+La méthode {\tt count} sur les entiers de 0 à 5 doit vous donner \textbf{1, 1, 2, 6, 24, 120}.
+\item (niveau 2) La grammaire des \emph{arbres binaires de recherche} décrits en Section~\ref{seq:binary-trees}.
+La méthode {\tt count} sur les entiers de 0 à 5 doit vous donner \textbf{1, 1, 2, 5, 14, 42}.
+\item (niveau 3) La grammaire des \emph{partitions d'ensemble} décrites en Section~\ref{seq:set-partitions}.
+La méthode {\tt count} sur les entiers de 0 à 5 doit vous donner \textbf{1, 1, 2, 5, 15, 52}.
+\item (niveau 3) La grammaire des \emph{Séquences zig-zag} décrites en Section~\ref{seq:sequences}.
+La méthode {\tt count} sur les entiers de 0 à 5 doit vous donner \textbf{1, 1, 1, 2, 5, 16}.
+\end{enumerate}
+
+\section{Implantation du projet}
 
 \subsection{Structures de données}
 
 On modélise chacune de ces classes combinatoires décrites récursivement par un
 objet (au sens de la programmation orientées objets) \Python. Dans l'exemple
-des arbres binaires, l'objet \verb+treeGram["Tree"]+ modélise l'ensemble de
-tous les arbres binaires. Cet ensemble est construit comme l'union de deux
-sous ensembles modélisés par les objets \verb+treeGram["Node"]+ et
-\verb+treeGram["Leaf"]+.  La classe de l'objet \verb+treeGram["Tree"]+ est
-ainsi \verb+UnionRule+, il est construit grâce à un appel au constructeur par
-\verb+UnionRule("Node", "Leaf")+.
+des arbres binaires, l'objet {\tt TreeLabelLeaves["Tree"]} modélise l'ensemble de
+tous les arbres binaires avec feuille étiquetées (l'équivalent de la classe {\tt BinaryTrees} du TP). 
+Cet ensemble est construit comme l'union de deux sous ensembles modélisés par 
+les objets {\tt TreeLabelLeaves["Node"]} et {\tt TreeLabelLeaves["Leaf"]}.  
+La classe de l'objet {\tt TreeLabelLeaves["Tree"]} est
+ainsi {\tt UnionRule}, il est construit grâce à un appel au constructeur par
+{\tt UnionRule("Node", "Leaf")}.
 
 
 Une grammaire sera stockée sous la forme d'un dictionnaire qui associe un
 objet à une chaîne de caractère. Dans le but de ne pas recopier plusieurs fois
 du code, on utilisera avantageusement la programmation objet et
 l'héritage. Ainsi chaque règle de grammaire sera un objet de la classe
-abstraite \texttt{AbstractRule}.
-\begin{itemize}
-\item les règles de constructions qui sont les objets des classes
-  \texttt{UnionRule} et \texttt{ProductRule} qui dérivent de la classe abstraite
-  \texttt{ConstructorRule};\smallskip
-\item les règles de constantes qui sont les objets des classes
-  \texttt{SingletonRule} et \texttt{EpsilonRule};
-\end{itemize}
-On aura aussi avantage à faire une classe
-\texttt{AbstractProductRule} pour les produits abstraits dont dériverons les
-trois classes de produits concrets.
-
-
+abstraite \texttt{AbstractRule}. On utilisera aussi les classes abstraites
+{\tt ConstructorRule}, {\tt ConstantRule} et {\tt AbstractProductRule}
+pour permettre la factorisation du code. (Remarque : en python, rien 
+ne distingue dans la déclaration une classe abstraite d'une classe concrète).
 \pagebreak
 
 Voici un schéma de la
-hiérarchie de classe: \bigskip
+hiérarchie de classe (les méthodes et paramètres des classes sont des suggestions que vous pouvez suivre ou non): \bigskip
 
 \begin{center}
 \begin{tikzpicture}
@@ -321,6 +482,8 @@ hiérarchie de classe: \bigskip
 \end{center}
 \smallskip
 
+
+
 Voici la liste des constructeurs ou méthode d'initialisation (méthodes
 \verb+__init__+ en Python) des différentes classes avec les paramètres et
 leurs types:
@@ -349,6 +512,16 @@ leurs types:
 En plus des méthodes listées dans ce diagramme, chaque classe devra implanter
 (ou bien hériter) les méthodes d'énumération suivantes: \texttt{count, list,
   unrank, random},\dots
+  
+Un fichier {\tt projet.py} vous est fourni avec l'architecture de base. Vous 
+devez conservez les noms de classe ainsi que les constructeurs des classes
+concrètes ({\tt UnionRule}, {\tt OrdProdRule}, {\tt ProductRule}, {\tt BoxProdRule},
+{\tt SingletonRule}, {\tt EpsilonRule}) pour que les tests définis dans {\tt tests.py}
+puissent être exécutés. En dehors de ça, vous êtes libre de modifier ce que vous souhaitez
+et de rajouter toutes les méthodes dont vous avez besoin. Si vous travaillez
+sur Jupyter, vous pouvez importer ou copier / coller le code du fichier dans une cellule.
+
+\subsection{Implantation de la définition récursive}
 
 Le principal problème d'implantation provient du fait qu'une grammaire est un
 \emph{ensemble de définitions mutuellement récursives}. Il y a donc un travail
@@ -370,33 +543,12 @@ bien fondée. Voici quelques éléments permettant de résoudre ce problème:
 \end{itemize}
 \medskip
 
-\subsection{À rendre sur papier}
-\todo{Update}
-\begin{ask}
-\item Pour les grammaires des arbres et des mots de Fibonnacci, donner dans un
-  tableau pour $n=0,\dots,10$ les réponses attendue pour la méthode
-  \texttt{count} pour les $8$ non terminaux,
-\item Donner la grammaire de tous les mots sur l'alphabet \texttt{A,B}.
-\item Donner la grammaire des mots de Dyck, c'est-à-dire les mots sur
-  l'alphabet $\{\texttt{(}, \texttt{)}\}$ et qui sont correctement
-  parenthésés.
-\item Donner la grammaire de mots sur l'alphabet \texttt{A,B} qui n'ont pas
-  trois lettres consécutivement égales.
-\item Donner la grammaire des palindromes sur l'alphabet \texttt{A},
-  \texttt{B}, même question sur l'alphabet \texttt{A,B,C}.
-\item Donner la grammaire des mots sur l'alphabet \texttt{A,B} qui
-  contiennent autant de lettres \texttt{A} que de lettres \texttt{B}.
-\end{ask}
-
-\begin{asks}
-\item Écrire une fonction qui vérifie qu'une grammaire est correcte,
-  c'est-à-dire que chaque non-terminal apparaissant dans une règle est bien
-  défini par la grammaire.
-\end{asks}
-
+\textbf{Implantez une méthode {\tt set\_grammar} dans la classe {\tt AbstractRule}
+et implantez les fonctions {\tt save\_grammar} et {\tt check\_grammar}.}.
 
 
 \section{Algorithmes}
+\label{seq:algo}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 On demande d'implanter les algorithmes de calculs suivants (dans ce qui suit
@@ -419,20 +571,21 @@ On demande d'implanter les algorithmes de calculs suivants (dans ce qui suit
 \end{itemize}
 
 Le calcul de la valuation est nécessaire aux étapes suivantes qui sont
-indépendantes. Je les ai néanmoins classé par ordre croissant de difficulté.
+indépendantes. Nous les avons néanmoins classé par ordre croissant de difficulté.
 
 \subsection{Calcul de la valuation}
 
 La \emph{valuation} du non-terminal \texttt{nt} est la taille du plus petit
 objet qui en dérive. La valuation d'une grammaire est l'ensemble des
-valuations des terminaux. Elle vérifie les quatres règles suivantes:
+valuations des terminaux. Elle vérifie les quatre règles suivantes:
 \begin{itemize}
 \item[$\bullet$] la valuation d'un \texttt{Singleton} est 1;
 \item[$\bullet$] la valuation d'un \texttt{Epsilon} est 0;
 \item[$\bullet$] la valuation de l'union \texttt{Union} des non-terminaux
   $N_1$ et $N_2$ est le minimum des valuations de $N_1$ et de $N_2$;
-\item[$\bullet$] la valuation d'un produit \texttt{Prod} des non-terminaux $N_1$
-  et $N_2$ est la somme des valuations de $N_1$ et de $N_2$;
+\item[$\bullet$] la valuation d'un produit des non-terminaux $N_1$
+  et $N_2$ est la somme des valuations de $N_1$ et de $N_2$; Par ailleurs,
+  la valuation du \texttt{BoxProduct} est au minimum de 1.
 \end{itemize}
 
 Pour la calculer, on utilise l'algorithme de point fixe suivant. On part de la
@@ -448,7 +601,7 @@ $V_{n-1}$. La valuation cherchée $V := V_n$ est obtenue quand $V_n=V_{n-1}$.
 $N$, alors aucun objet ne dérive de ce non-terminal. On considère alors que la
 grammaire est incorrecte.  \bigskip
 
-Par exemple, sur les arbres, le calcul se fait en $4$ étapes:
+Par exemple, sur les arbres avec feuilles étiquetées, le calcul se fait en $4$ étapes:
 $$\begin{array}{|c|ccc|}
 \hline
   n     &  \texttt{Tree}  &  \texttt{Leaf}  &  \texttt{Node} \\
@@ -470,7 +623,7 @@ $$\begin{array}{|c|ccc|}
 \subsubsection{À faire:}
 
 \begin{asks}
-\item À rendre sur papier: Pour les différentes grammaire considérée, appliquer
+\item À rendre sur papier: Pour les différentes grammaire considérée (exemples et exercices), appliquer
   l'algorithme à la main et donner les valuations des différents non
   terminaux.
 \item Écrire un fonction \texttt{init\_grammar} qui prend en paramètre une
@@ -519,90 +672,65 @@ ensemble de taille $k$ et $l=n-k$ est $\binom{n}{k} = \frac{n!}{k!\,l!}$.
 
 
 \subsection{Calcul de la liste des objets}
-\todo{update}
+
 On applique récursivement les définitions des constructeurs
 \texttt{Singleton}, \texttt{Epsilon}, \texttt{Union} et \texttt{Prod} pour
-construire la liste des objets de taille $i$. En particulier, si $N$ est le
-produit \texttt{Prod} des non-terminaux $N_1$ et $N_2$, la liste des objets
-dérivant de $N$ et de poids $i$ est la concaténation des listes de tous les
-produits cartésiens d'éléments dérivant de $N_1$ et de taille $k$ et
-d'éléments dérivant de $N_2$ et de taille $l$, pour tous les couples $k,l$
-tels que $k+l=i$, $k \geq V(N_1)$ et $l \geq V(N_2)$ (comme précédemment
-$V(M)$ désigne la valuation du non-terminal $M$).
+construire la liste des objets de taille $i$. 
 
-Par exemple, pour obtenir les arbres de taille $3$, on procède de la manière
-suivante
+\subsubsection{Singleton et Epsilon}
 
-\noindent Calcul de \texttt{Tree = Union (Leaf, Node)} avec $i=3$.
+Dans le cas des règles constantes, on vérifiera si la taille de la liste
+des étiquettes
+correspond à l'unique taille engendrée par la règle (1 pour Singleton, 0
+pour Epsilon) et le cas échéant, on engendra cet objet unique. Pour Singleton,
+il faudra utiliser la fonction de création de l'objet en fonction de l'étiquette.
+Pour Epsilon, l'objet est stocké dans la classe.
+
+\subsubsection{Union}
+
+Pour une règle union de deux règles $R_1$ et $R_2$, on engendrera récursivement
+les objets de $R_1$ puis ceux de $R_2$ sur l'ensemble des étiquettes données
+en paramètre.
+
+\subsubsection{Produit}
+
+La difficulté principale 
+vient des différents produits car on doit dans ce cas décider en plus de
+la répartition des étiquettes. 
+
+Pour chaque produit, on écrira une méthode {\tt iter\_label} qui prend 
+en paramètre un entier $k$ et une liste de labels $\ell$ et qui itère
+selon toutes les façons de diviser la liste $\ell$ en $k$ éléments d'un côté et $n-k$ éléments de 
+l'autre selon les règles particulières du produit décrite en Section~\ref{seq:product}.
+
+Exemples :
 \begin{itemize}
-\item Application de \texttt{Leaf = Singleton Leaf} avec $i=3$, on retourne
-  la liste vide \texttt{[]};
-\item Application de \texttt{Node = Prod(Tree, Tree)} avec $i=3$. La valuation
-  de \texttt{Tree} est 1. Il y a donc deux possibilités $3=1+2$ ou $3=2+1$.
-  \begin{enumerate}
-  \item \begin{itemize}  
-    \item Application de \texttt{Tree = Union (Leaf, Node)} avec $i=2$.
-      \begin{itemize}
-      \item \texttt{Leaf} est vide avec $i=2$ on retourne la liste vide.
-      \item Application de \texttt{Node = Prod(Tree, Tree)} avec $i=2$. La
-        valuation de \texttt{Tree} est 1. Une seule décomposition est possible
-        $1+1$\dots\ On appelle donc deux fois \texttt{Tree} avec $i=1$\dots\ 
-        (Je n'écrit pas les appels récursifs)\dots\ qui retourne la liste
-        \texttt{[Leaf]}. On retourne donc la liste
-        $$\texttt{[Node(Leaf, Leaf)]}$$
-      \end{itemize}
-    \item Application de \texttt{Tree = Union (Leaf, Node)} avec $i=1$.
-      On retourne la liste 
-        $$\texttt{[Leaf]}$$
-    \end{itemize}
-    Le produit cartésien des deux listes précédentes est la liste formée du
-    seul élément
-    $$\texttt{[Node(Node(Leaf, Leaf), Leaf)]}$$
-  \item \begin{itemize}  
-    \item Application de \texttt{Tree = Union (Leaf, Node)} avec $i=1$.
-      On retourne donc la liste
-      $$\texttt{[Leaf]}$$
-    \item Application de \texttt{Tree = Union (Leaf, Node)} avec $i=2$.
-      On retourne donc la liste
-      $$\texttt{[Node(Leaf, Leaf)]}$$
-    \end{itemize}
-    Le produit cartésien des deux listes précédentes est la liste formée du
-    seul élément
-    $$\texttt{[Node(Leaf, Node(Leaf, Leaf))]}$$
-  \end{enumerate}
-  On retourne donc la liste des deux arbres:
-\begin{verbatim}
-
-[Node(Leaf, Node(Leaf, Leaf)), Node(Node(Leaf, Leaf), Leaf)]
-
-\end{verbatim}
+\item la méthode \texttt{iter\_label([1,2,3],2)} sur le produit classique doit engendrer les 
+découpages suivants : $([1,2], [3]), ([1,3], [2]), ([2,3], [1])$.
+\item la méthode \texttt{iter\_label([1,2,3],2)} sur le produit box doit engendrer les 
+découpages suivants : $([1,2], [3]), ([1,3], [2])$.
+\item la méthode \texttt{iter\_label([1,2,3],2)} sur le produit ordonné doit engendrer l'unique
+découpage : $([1,2], [3])$.
 \end{itemize}
-\bigskip
 
-Pour $i=6$, il faut essayer les décompositions $6=5+1$, $6=4+2$, $6=3+3$,
-$6=2+4$ et $6=1+5$. Étudions le cas $3+3$. Par appel récursif on trouve deux
-arbres de poids $3$:
-\begin{verbatim}
- [Node(Node(Leaf, Leaf), Leaf); Node(Leaf, Node(Leaf, Leaf))]
-\end{verbatim}
-Le produit cartésien est donc formé de $4$ éléments qui correspondent aux $4$
-arbres suivants:
-\begin{verbatim}
- Node(Node(Leaf, Node(Leaf, Leaf)), Node(Node(Leaf, Leaf), Leaf));
- Node(Node(Node(Leaf, Leaf), Leaf), Node(Node(Leaf, Leaf), Leaf));
- Node(Node(Leaf, Node(Leaf, Leaf)), Node(Leaf, Node(Leaf, Leaf)));
- Node(Node(Node(Leaf, Leaf), Leaf), Node(Leaf, Node(Leaf, Leaf)));
-\end{verbatim}
+L'algorithme de création des objets est ensuite le même pour tous les produits. 
+Pour calculer le produit de deux ensembles $E_1$ et $E_2$ : pour toutes les valeurs
+de $k$ en fonction des valuations de $E_1$ et $E_2$, pour tous les découpages possible 
+de {\tt iter\_label}, pour tous les objets $e_1$ de $E_1$ de taille $k$ et pour tous
+les objets $e_2$ de $E_2$ de taille $n-k$, on créera l'objet formé de $e_1$ et $e_2$
+grâce à la fonction de création stockée dans la classe.
+
 
 
 \subsection{Calcul du $i$-ème élément : la méthode \texttt{unrank}}
 
 Pour calculer l'élément de taille $n$ et de rang $i$, on fait appel à la
-méthode \texttt{unrank}. Voici par exemple l'arbre de taille $6$ et de rang
+méthode \texttt{unrank}. Voici par exemple l'arbre dont les feuilles
+sont étiquetées par $[1,2,3,4,5,6]$ de rang 12.
 $12$.
 \begin{verbatim}
-    >>> treeGram['Tree'].unrank(6, 12)
-    Node(Leaf, Node(Node(Node(Leaf, Node(Leaf, Leaf)), Leaf), Leaf))
+>>> TreeLabelLeaves["Tree"].unrank([1,2,3,4,5,6],12)
+(1, (2, (4, (3, (5, 6)))))
 \end{verbatim}
 \textbf{Attention ! La numérotation commence à zéro.}
 
@@ -616,7 +744,7 @@ On procédera récursivement comme suit:
   connu les nombres d'objets: $C_U(n) = C_A(n) + C_B(n)$. Alors l'objet de $U$
   de rang $i$ est l'objet de $A$ de rang $i$ si $i<C_A(n)$ et l'objet de $B$
   de rang $i-C_A(n)$ sinon.
-\item dans le cas d'un produit: \texttt{"U" : ProductRule("A", "B")}, on suppose
+\item \todo{UPDATE} dans le cas d'un produit: \texttt{"U" : ProductRule("A", "B")}, on suppose
   connu les nombres d'objets:
   $$
   C_U(n) = \sum_{i=0}^n C_A(i)\,C_B(n-i)\,.
@@ -683,7 +811,7 @@ des classes les informations nécéssaires à l'analyse des objets. En particuli
 \item Pour \texttt{UnionRule(A, B)}, il faut en plus que la classe ait un
   moyen de savoir si l'objet \texttt{obj} dérive de \texttt{A} ou de
   \texttt{B}.
-\item De même pour le produit \texttt{ProductRule(A, B)}, il faut une fonction
+\item De même pour les différentes règles de produit, il faut une fonction
   permettant de retrouver le couple \texttt{(a, b)} à partir de \texttt{obj}.
 \end{itemize}
 \begin{asks}
@@ -723,12 +851,6 @@ des classes les informations nécéssaires à l'analyse des objets. En particuli
 \end{verbatim}
 \end{asks}
 
-\section{Pour aller plus loin}
-
-\begin{asks}
-\item Écrire des grammaires pour engendrer des documents \texttt{XML} ou
-  \texttt{HTML} complexe.
-\end{asks}
 \bigskip
 \bigskip
 \bigskip
