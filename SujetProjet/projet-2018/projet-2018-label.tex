@@ -15,7 +15,7 @@
 \usepackage{styles/tikz-uml}
 \usepackage{hyperref}
 \usepackage{listingsutf8}
-
+\usepackage{xspace}
 
 \lstset{inputencoding=utf8/latin1,
   language=python,
@@ -50,7 +50,30 @@
                        {\setcounter{asuivre}{\theenumi}\end{enumerate}}
 
 
-\newcommand{\Python}{\texttt{Python}}
+\newcommand{\Python}{\texttt{Python}\xspace}
+
+\newcommand{\AbstractRule}{\texttt{AbstractRule}\xspace}
+\newcommand{\ConstructorRule}{\texttt{ConstructorRule}\xspace}
+\newcommand{\ConstantRule}{\texttt{ConstantRule}\xspace}
+\newcommand{\AbstractProductRule}{\texttt{AbstractProductRule}\xspace}
+
+\newcommand{\EpsilonRule}{\texttt{EpsilonRule}\xspace}
+\newcommand{\SingletonRule}{\texttt{SingletonRule}\xspace}
+\newcommand{\UnionRule}{\texttt{UnionRule}\xspace}
+\newcommand{\ProductRule}{\texttt{ProductRule}\xspace}
+\newcommand{\BoxProdRule}{\texttt{BoxProdRule}\xspace}
+\newcommand{\OrdProdRule}{\texttt{OrdProdRule}\xspace}
+
+\newcommand{\cnt}{\texttt{count}\xspace}
+\newcommand{\lst}{\texttt{list}\xspace}
+\newcommand{\unrank}{\texttt{unrank}\xspace}
+\newcommand{\rank}{\texttt{rank}\xspace}
+
+\newcommand{\Leaf}{\texttt{Leaf}\xspace}
+\newcommand{\Node}{\texttt{Node}\xspace}
+
+
+% \renewcommand{\lstinputlisting}{}
 
 \begin{document}
 \maketitle
@@ -67,7 +90,7 @@
 
   On rédigera également un \textbf{rapport} présentant les fonctionnalités et
   répondant aux questions théoriques du sujet. Les algorithmes et choix
-  d'implantations devront être expliqués. 
+  d'implantations devront être expliqués.
 \end{abstract}
 
 \section{Grammaires étiquetées : Introduction et quelques exemples}
@@ -144,7 +167,7 @@ Il y a deux façons classiques d'étiqueter les arbres binaires :
 \item étiquetage des noeuds internes.
 \end{itemize}
 
-Dans le fichier {\tt LabelledBinaryTree.py} vous trouverez une classe python très proche
+Dans le fichier \texttt{LabelledBinaryTree.py} vous trouverez une classe python très proche
 de celle vue en TP qui permet de représenter des arbres binaires étiquetés (sur les noeuds
 ou les feuilles).
 
@@ -163,7 +186,7 @@ b(leaf, a(c(leaf, leaf), leaf))
 \begin{verbatim}
 >>> t = Node(Leaf("c"), Node(Node(Leaf("a"),Leaf("b")), Leaf("d")))
 >>> t
->>> (c, ((a, b), d))
+(c, ((a, b), d))
 \end{verbatim}
 
 Les grammaires étiquetées nous permettront par exemple d'engendrer :
@@ -171,20 +194,19 @@ Les grammaires étiquetées nous permettront par exemple d'engendrer :
 \begin{itemize}
 \item L'ensemble des arbres dont les noeuds sont étiquetés par un ensemble donné.
 \item L'ensemble des arbres dont les feuilles sont étiquetées par un ensemble donné.
-\item Les arbres croissants : l'ensemble des arbres dont les noeuds sont étiquetés par 
-un ensemble ordonné donné tels que l'étiquette d'un noeud soit toujours inférieure 
+\item Les arbres croissants : l'ensemble des arbres dont les noeuds sont étiquetés par
+un ensemble ordonné donné tels que l'étiquette d'un noeud soit toujours inférieure
 aux étiquettes de ses fils.
-\item Les arbres binaires de recherche : l'ensemble des arbres dont les noeuds sont étiquetés par 
+\item Les arbres binaires de recherche : l'ensemble des arbres dont les noeuds sont étiquetés par
 un ensemble ordonné donné tels que l'étiquette d'un noeud soit toujours supérieure
 à toutes les étiquettes de son fils gauche et inférieure à toutes les étiquettes
 de son fils droit.
 \end{itemize}
-
-\begin{tabular}{l|l}
-\includegraphics[scale=.5]{images/arbre_croissant.pdf} & 
+\[\begin{tabular}{l@{\qquad}l}
+\includegraphics[scale=.5]{images/arbre_croissant.pdf} &
 \includegraphics[scale=.5]{images/abr.pdf} \\
 Exemple arbre croissant & Exemple ABR
-\end{tabular}
+\end{tabular}\]
 
 \subsection{Définitions formelles des grammaires étiquetées}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -203,7 +225,7 @@ Une \emph{règle de grammaire} $R$ décrit un ensemble qui est
 \item soit l'\emph{union de deux ensembles} décrit par deux
   non-terminaux $N_1$ et $N_2$;
 \item soit une variante du \emph{produit
-    cartésien de deux ensembles}\footnote{les variantes possibles sont décrites un peu plus tard} 
+    cartésien de deux ensembles}\footnote{les variantes possibles sont décrites un peu plus tard}
     décrit par deux non-terminaux $N_1$ et $N_2$;
   L'ensemble est alors construit à partir des paires d'éléments $(e_1, e_2)
   \in N_1 \times N_2$.
@@ -218,28 +240,30 @@ donc la somme des poids de $e_1$ et de $e_2$.
 Cette taille est appelé \emph{valuation} du non-terminal.
 
 Le but du projet est de permettre à un utilisateur de décrire une grammaire
-en python sous la forme d'un dictionnaire associant une règle à chaque 
-non-terminal et calculant : 
+en python sous la forme d'un dictionnaire associant une règle à chaque
+non-terminal et calculant :
 \begin{itemize}
-\item Le nombre d'objet d'une certaine taille décrits par la grammaire (méthode {\tt count})
-\item La liste des objets étiquetés par une liste d'étiquettes donnée (méthode {\tt list})
-\item Un objet identifié par son rang dans la liste (méthode {\tt unrank})
-\item Le rang d'un objet donné (méthode {\tt rank})
+\item Le nombre d'objet d'une certaine taille décrits par la grammaire
+  (méthode \cnt)
+\item La liste des objets étiquetés par une liste d'étiquettes donnée (méthode
+  \lst)
+\item Un objet identifié par son rang dans la liste (méthode \unrank)
+\item Le rang d'un objet donné (méthode \rank)
 \end{itemize}
 
 \subsection{Quelques exemples de base (mais indispensables !)}
 
-Commençons par des exemples triviaux de grammaires. Nous vous présentons 
-à chaque fois la description de la grammaire et son implantation python telle
-qu'elle devra fonctionner lorsque vous aurez réalisé le projet. 
+Commençons par des exemples triviaux de grammaires. Nous vous présentons à
+chaque fois la description de la grammaire et son implantation python telle
+qu'elle devra fonctionner lorsque vous aurez réalisé le projet.
 
 Tout le code python de déclaration des grammaires avec les tests associés se trouve
-dans le fichier {\tt tests.py}.
+dans le fichier \texttt{tests.py}.
 
 \subsubsection{La Grammaire singleton}
 
-Voici une grammaire contenant une unique règle de type {\tt Singleton}. Cette 
-grammaire ne peut engendrer que des objets de taille 1. 
+Voici une grammaire contenant une unique règle de type \SingletonRule. Cette
+grammaire ne peut engendrer que des objets de taille 1.
 
 \begin{tabular}{lll}
 \textbf{Singl} & $\rightarrow$ & Singleton
@@ -249,22 +273,24 @@ En python, on l'implantera de cette façon :
 
 \lstinputlisting[firstline=10,lastline=12]{code/tests.py}
 
-Ici, l'argument {\tt lambda x:x} est donné pour initialiser l'objet {\tt SingletonRule}.
-Cela correspond à la fonction qui sera utilisée pour concrètement fabriquer l'objet 
-combinatoire associé à une étiquette. Dans le cas de cette grammaire, c'est une fonction triviale qui prend l'étiquette
-(typiquement une chaîne de caractère ou un entier) en argument et la renvoie directement. 
-On verra dans certains cas que cette fonction peut être plus complexe, par exemple dans le
-cas des arbres binaires.
+Ici, l'argument \texttt{lambda x:x} est donné pour initialiser l'objet construit
+par \SingletonRule.  Cela correspond à la fonction qui sera utilisée pour
+concrètement fabriquer l'objet combinatoire associé à une étiquette. Dans le
+cas de cette grammaire, c'est une fonction triviale qui prend l'étiquette
+(typiquement une chaîne de caractère ou un entier) en argument et la renvoie
+directement.  On verra dans certains cas que cette fonction peut être plus
+complexe, par exemple dans le cas des arbres binaires.
 
-Voilà quelques exemples d'utilisation de cette grammaire et des résultats attendus pour les méthodes 
-{\tt count} et {\tt list} que vous devrez implanter. La description précise de ces méthodes et des 
-algorithmes associés est donnée en Section~\ref{seq:algo}.
+Voilà quelques exemples d'utilisation de cette grammaire et des résultats
+attendus pour les méthodes \cnt et \lst que vous devrez
+implanter. La description précise de ces méthodes et des algorithmes associés
+est donnée en Section~\ref{seq:algo}.
 
 \lstinputlisting[firstline=14,lastline=24]{code/tests.py}
 
 \subsubsection{La Grammaire Epsilon}
 
-Voici une grammaire contenant une unique règle de type {\tt Epsilon}. Cette 
+Voici une grammaire contenant une unique règle de type \EpsilonRule. Cette
 grammaire n'engendre qu'un objet unique de taille 0. Dans l'exemple suivant
 c'est la chaîne vide.
 
@@ -276,15 +302,16 @@ En python, on l'implantera de cette façon :
 
 \lstinputlisting[firstline=28,lastline=30]{code/tests.py}
 
-L'objet {\tt Epsilon} prend en paramètre l'objet de taille 0 qu'il crée. Voilà quelques exemples 
-d'utilisation de cette grammaire et des résultats attendus pour les méthodes 
-{\tt count} et {\tt list} que vous devrez implanter.
+L'objet \EpsilonRule prend en paramètre l'objet de taille 0 qu'il crée. Voilà
+quelques exemples d'utilisation de cette grammaire et des résultats attendus
+pour les méthodes \cnt et \lst que vous devrez implanter.
 
 \lstinputlisting[firstline=32,lastline=42]{code/tests.py}
 
 \subsubsection{Les permutations de taille 2}
 
-Voilà un premier exemple de grammaire à 2 règles qui engendre les permutations de taille~2.
+Voilà un premier exemple de grammaire à 2 règles qui engendre les permutations
+de taille~2.
 
 \begin{tabular}{lll}
 \textbf{Perms} & $\rightarrow$ & Produit(\textbf{Letter}, \textbf{Letter}) \\
@@ -295,9 +322,10 @@ En python, on l'implantera de cette façon :
 
 \lstinputlisting[firstline=48,lastline=51]{code/tests.py}
 
-Remarquez que l'objet {\tt ProductRule} prend en paramètre une fonction qui fabrique un
-objet combinatoire à partir de deux objets donnés. Voilà quelques exemples 
-d'utilisation de cette grammaire et des méthodes {\tt count} et {\tt list} que vous devrez implanter.
+Remarquez que l'objet \ProductRule prend en paramètre une fonction qui
+fabrique un objet combinatoire à partir de deux objets donnés. Voilà quelques
+exemples d'utilisation de cette grammaire et des méthodes \cnt et \lst que
+vous devrez implanter.
 
 \lstinputlisting[firstline=53,lastline=64]{code/tests.py}
 
@@ -332,16 +360,16 @@ Ce qui en python, s'implante par
 
 \lstinputlisting[firstline=148,lastline=152]{code/tests.py}
 
-Remarquez que les objets {\tt Singleton} et {\tt ProductRule} prennent 
-directement les fonctions {\tt Leaf} et {\tt Node} en paramètre pour
+Remarquez que les objets \SingletonRule et \ProductRule prennent
+directement les fonctions \Leaf et \Node en paramètre pour
 la création des objets. Voilà les résultats attendus. Notez que
 la taille de l'arbre est ici le nombre de feuilles.
 
 \lstinputlisting[firstline=156,lastline=165]{code/tests.py}
 
-Voici l'implantation  d'une grammaire pour implanter les arbres dont les noeuds internes 
-sont étiquetés. Cette fois la taille de l'arbre est donnée par le nombre
-de noeuds internes et les feuilles sont dont de taille 0.
+Voici l'implantation d'une grammaire pour implanter les arbres dont les noeuds
+internes sont étiquetés. Cette fois la taille de l'arbre est donnée par le
+nombre de noeuds internes et les feuilles sont dont de taille 0.
 
 \lstinputlisting[firstline=169,lastline=185]{code/tests.py}
 
@@ -353,71 +381,79 @@ Pour que l'on obtienne un comportement intéressant avec les étiquettes, il
 faut pouvoir contrôler la leurs provenance. On va donc distinguer trois
 produits.
 \begin{enumerate}
-\item le \textbf{produit cartésien ordinaire} noté \texttt{Product}. Les
+\item le \textbf{produit cartésien ordinaire} noté \ProductRule. Les
   étiquettes se répartissent alors de toutes les manières possibles. Ainsi,
-  la règle \textbf{C} $\rightarrow$ Product(\textbf{A}, \textbf{B})
+  la règle \textbf{C} $\rightarrow$ \ProductRule(\textbf{A}, \textbf{B})
   sur les étiquettes $[1,2,3]$ engendre l'union des ensembles suivant
 \begin{align*}
 &\textbf{A}([]) \times \textbf{B}([1,2,3]) \\
- &\textbf{A}([1]) \times \textbf{B}([2,3]) \\ 
- &\textbf{A}([2]) \times \textbf{B}([1,3]) \\ 
- &\textbf{A}([3]) \times \textbf{B}([1,2]) \\ 
- &\textbf{A}([1,2]) \times \textbf{B}([3]) \\ 
- &\textbf{A}([1,3]) \times \textbf{B}([2]) \\ 
- &\textbf{A}([2,3]) \times \textbf{B}([1]) \\ 
+ &\textbf{A}([1]) \times \textbf{B}([2,3]) \\
+ &\textbf{A}([2]) \times \textbf{B}([1,3]) \\
+ &\textbf{A}([3]) \times \textbf{B}([1,2]) \\
+ &\textbf{A}([1,2]) \times \textbf{B}([3]) \\
+ &\textbf{A}([1,3]) \times \textbf{B}([2]) \\
+ &\textbf{A}([2,3]) \times \textbf{B}([1]) \\
  &\textbf{A}([1,2,3]) \times \textbf{B}([])
 \end{align*}
 
-\item le \textbf{produit cartésien boxed} noté \texttt{BoxProduct}. 
+\item le \textbf{produit cartésien boxed} noté \BoxProdRule.
 L'ensemble gauche contient forcément la plus petite étiquette.
-Ainsi, la règle \textbf{C} $\rightarrow$ BoxProduct(\textbf{A}, \textbf{B})
+Ainsi, la règle \textbf{C} $\rightarrow$\BoxProdRule(\textbf{A}, \textbf{B})
   sur les étiquettes $[1,2,3]$ engendre l'union des ensembles suivant
 \begin{align*}
- &\textbf{A}([1]) \times \textbf{B}([2,3]) \\ 
- &\textbf{A}([1,2]) \times \textbf{B}([3]) \\ 
- &\textbf{A}([1,3]) \times \textbf{B}([2]) \\ 
+ &\textbf{A}([1]) \times \textbf{B}([2,3]) \\
+ &\textbf{A}([1,2]) \times \textbf{B}([3]) \\
+ &\textbf{A}([1,3]) \times \textbf{B}([2]) \\
  &\textbf{A}([1,2,3]) \times \textbf{B}([])
 \end{align*}
-\item le \textbf{produit cartésien ordonné} noté \texttt{OrdProduct}. Les
+\item le \textbf{produit cartésien ordonné} noté \OrdProdRule. Les
   étiquettes se répartissent en mettant les plus petites à gauches et les plus
-  grandes à droite. Ainsi, la règle \textbf{C} $\rightarrow$ OrdProduct(\textbf{A}, \textbf{B})
-  sur les étiquettes $[1,2,3]$ engendre l'union des ensembles suivant
+  grandes à droite. Ainsi, la règle \textbf{C} $\rightarrow$
+  \OrdProdRule(\textbf{A}, \textbf{B}) sur les étiquettes $[1,2,3]$ engendre
+  l'union des ensembles suivant
 \begin{align*}
 &\textbf{A}([]) \times \textbf{B}([1,2,3]) \\
- &\textbf{A}([1]) \times \textbf{B}([2,3]) \\ 
- &\textbf{A}([1,2]) \times \textbf{B}([3]) \\ 
+ &\textbf{A}([1]) \times \textbf{B}([2,3]) \\
+ &\textbf{A}([1,2]) \times \textbf{B}([3]) \\
  &\textbf{A}([1,2,3]) \times \textbf{B}([])
 \end{align*}
 \end{enumerate}
-Avec ces définitions, on peut par exemple définir l'ensemble {\tt SortedSeq} des séquences
-ordonnées (un seul objet par taille : la séquence ordonnée des étiquettes).
+Avec ces définitions, on peut par exemple définir l'ensemble
+\texttt{SortedSeq} des séquences ordonnées (un seul objet par taille : la
+séquence ordonnée des étiquettes).
 
 \lstinputlisting[firstline=94,lastline=115]{code/tests.py}
 
-Et voici un exemple utilisant le {\tt BoxProduct}.
+Et voici un exemple utilisant le \BoxProdRule.
 
 \lstinputlisting[firstline=119,lastline=140]{code/tests.py}
 
 \subsection{Exercices}
 
-Donnez les grammaires engendrant les ensembles suivants. Vous donnerez 
-les descriptions formelles dans le rapports et proposerez aussi 
-des implantations python une fois le projet réalisé et testerez 
-les différentes méthodes. 
+Donnez les grammaires engendrant les ensembles suivants. Vous donnerez
+les descriptions formelles dans le rapports et proposerez aussi
+des implantations python une fois le projet réalisé et testerez
+les différentes méthodes.
 
 \begin{enumerate}
-\item (niveau 1) La grammaire des \emph{séquences cycliques} décrites en Section~\ref{seq:sequences}. 
-La méthode {\tt count} sur les entiers de 0 à 5 doit vous donner \textbf{1, 1, 1, 2, 6, 24}.
-\item (niveau 1) La grammaire des arbres binaires dont les feuilles sont étiquetées dans l'ordre de gauche à droite.
-La méthode {\tt count} sur les entiers de 0 à 5 doit vous donner \textbf{0, 1, 1, 2, 5, 14}.
-\item (niveau 2) La grammaire des \emph{arbres binaires croissants} décrits en Section~\ref{seq:binary-trees}.
-La méthode {\tt count} sur les entiers de 0 à 5 doit vous donner \textbf{1, 1, 2, 6, 24, 120}.
-\item (niveau 2) La grammaire des \emph{arbres binaires de recherche} décrits en Section~\ref{seq:binary-trees}.
-La méthode {\tt count} sur les entiers de 0 à 5 doit vous donner \textbf{1, 1, 2, 5, 14, 42}.
-\item (niveau 3) La grammaire des \emph{partitions d'ensemble} décrites en Section~\ref{seq:set-partitions}.
-La méthode {\tt count} sur les entiers de 0 à 5 doit vous donner \textbf{1, 1, 2, 5, 15, 52}.
-\item (niveau 3) La grammaire des \emph{Séquences zig-zag} décrites en Section~\ref{seq:sequences}.
-La méthode {\tt count} sur les entiers de 0 à 5 doit vous donner \textbf{1, 1, 1, 2, 5, 16}.
+\item (niveau 1) La grammaire des \emph{séquences cycliques} décrites en
+  Section~\ref{seq:sequences}.  La méthode \cnt sur les entiers de 0 à 5
+  doit vous donner \textbf{1, 1, 1, 2, 6, 24}.
+\item (niveau 1) La grammaire des arbres binaires dont les feuilles sont
+  étiquetées dans l'ordre de gauche à droite.  La méthode \cnt sur les
+  entiers de 0 à 5 doit vous donner \textbf{0, 1, 1, 2, 5, 14}.
+\item (niveau 2) La grammaire des \emph{arbres binaires croissants} décrits en
+  Section~\ref{seq:binary-trees}.  La méthode \cnt sur les entiers de 0 à 5
+  doit vous donner \textbf{1, 1, 2, 6, 24, 120}.
+\item (niveau 2) La grammaire des \emph{arbres binaires de recherche} décrits
+  en Section~\ref{seq:binary-trees}.  La méthode \cnt sur les entiers de 0 à
+  5 doit vous donner \textbf{1, 1, 2, 5, 14, 42}.
+\item (niveau 3) La grammaire des \emph{partitions d'ensemble} décrites en
+  Section~\ref{seq:set-partitions}.  La méthode \cnt sur les entiers de 0 à
+  5 doit vous donner \textbf{1, 1, 2, 5, 15, 52}.
+\item (niveau 3) La grammaire des \emph{Séquences zig-zag} décrites en
+  Section~\ref{seq:sequences}.  La méthode \cnt sur les entiers de 0 à 5
+  doit vous donner \textbf{1, 1, 1, 2, 5, 16}.
 \end{enumerate}
 
 \section{Implantation du projet}
@@ -426,27 +462,28 @@ La méthode {\tt count} sur les entiers de 0 à 5 doit vous donner \textbf{1, 1,
 
 On modélise chacune de ces classes combinatoires décrites récursivement par un
 objet (au sens de la programmation orientées objets) \Python. Dans l'exemple
-des arbres binaires, l'objet {\tt TreeLabelLeaves["Tree"]} modélise l'ensemble de
-tous les arbres binaires avec feuille étiquetées (l'équivalent de la classe {\tt BinaryTrees} du TP). 
-Cet ensemble est construit comme l'union de deux sous ensembles modélisés par 
-les objets {\tt TreeLabelLeaves["Node"]} et {\tt TreeLabelLeaves["Leaf"]}.  
-La classe de l'objet {\tt TreeLabelLeaves["Tree"]} est
-ainsi {\tt UnionRule}, il est construit grâce à un appel au constructeur par
-{\tt UnionRule("Node", "Leaf")}.
+des arbres binaires, l'objet \texttt{TreeLabelLeaves["Tree"]} modélise l'ensemble de
+tous les arbres binaires avec feuille étiquetées (l'équivalent de la classe 
+\texttt{BinaryTrees} du TP).
+Cet ensemble est construit comme l'union de deux sous ensembles modélisés par
+les objets \texttt{TreeLabelLeaves["Node"]} et \texttt{TreeLabelLeaves["Leaf"]}.
+La classe de l'objet \texttt{TreeLabelLeaves["Tree"]} est
+ainsi \UnionRule, il est construit grâce à un appel au constructeur par
+\texttt{UnionRule("Node", "Leaf")}.
 
 
 Une grammaire sera stockée sous la forme d'un dictionnaire qui associe un
 objet à une chaîne de caractère. Dans le but de ne pas recopier plusieurs fois
 du code, on utilisera avantageusement la programmation objet et
 l'héritage. Ainsi chaque règle de grammaire sera un objet de la classe
-abstraite \texttt{AbstractRule}. On utilisera aussi les classes abstraites
-{\tt ConstructorRule}, {\tt ConstantRule} et {\tt AbstractProductRule}
-pour permettre la factorisation du code. (Remarque : en python, rien 
+abstraite \AbstractRule. On utilisera aussi les classes abstraites
+\ConstructorRule, \ConstantRule et \AbstractProductRule
+pour permettre la factorisation du code. (Remarque : en python, rien
 ne distingue dans la déclaration une classe abstraite d'une classe concrète).
 \pagebreak
 
-Voici un schéma de la
-hiérarchie de classe (les méthodes et paramètres des classes sont des suggestions que vous pouvez suivre ou non): \bigskip
+Voici un schéma de la hiérarchie de classe (les méthodes et paramètres des
+classes sont des suggestions que vous pouvez suivre ou non): \bigskip
 
 \begin{center}
 \begin{tikzpicture}
@@ -527,14 +564,15 @@ leurs types:
 En plus des méthodes listées dans ce diagramme, chaque classe devra implanter
 (ou bien hériter) les méthodes d'énumération suivantes: \texttt{count, list,
   unrank, random},\dots
-  
-Un fichier {\tt projet.py} vous est fourni avec l'architecture de base. Vous 
+
+Un fichier \texttt{projet.py} vous est fourni avec l'architecture de base. Vous
 devez conservez les noms de classe ainsi que les constructeurs des classes
-concrètes ({\tt UnionRule}, {\tt OrdProdRule}, {\tt ProductRule}, {\tt BoxProdRule},
-{\tt SingletonRule}, {\tt EpsilonRule}) pour que les tests définis dans {\tt tests.py}
-puissent être exécutés. En dehors de ça, vous êtes libre de modifier ce que vous souhaitez
-et de rajouter toutes les méthodes dont vous avez besoin. Si vous travaillez
-sur Jupyter, vous pouvez importer ou copier / coller le code du fichier dans une cellule.
+concrètes (\UnionRule, \OrdProdRule, \ProductRule, \BoxProdRule,
+\SingletonRule, \EpsilonRule) pour que les tests définis dans \texttt{tests.py}
+puissent être exécutés. En dehors de ça, vous êtes libre de modifier ce que
+vous souhaitez et de rajouter toutes les méthodes dont vous avez besoin. Si
+vous travaillez sur Jupyter, vous pouvez importer ou copier / coller le code
+du fichier dans une cellule.
 
 \subsection{Implantation de la définition récursive}
 
@@ -558,8 +596,8 @@ bien fondée. Voici quelques éléments permettant de résoudre ce problème:
 \end{itemize}
 \medskip
 
-\textbf{Implantez une méthode {\tt set\_grammar} dans la classe {\tt AbstractRule}
-et implantez les fonctions {\tt save\_grammar} et {\tt check\_grammar}.}.
+\textbf{Implantez une méthode \texttt{set\_grammar} dans la classe \texttt{AbstractRule}
+et implantez les fonctions \texttt{save\_grammar} et \texttt{check\_grammar}.}.
 
 
 \section{Algorithmes}
@@ -594,13 +632,13 @@ La \emph{valuation} du non-terminal \texttt{nt} est la taille du plus petit
 objet qui en dérive. La valuation d'une grammaire est l'ensemble des
 valuations des terminaux. Elle vérifie les quatre règles suivantes:
 \begin{itemize}
-\item[$\bullet$] la valuation d'un \texttt{Singleton} est 1;
-\item[$\bullet$] la valuation d'un \texttt{Epsilon} est 0;
-\item[$\bullet$] la valuation de l'union \texttt{Union} des non-terminaux
+\item[$\bullet$] la valuation d'un \SingletonRule est 1;
+\item[$\bullet$] la valuation d'un \EpsilonRule est 0;
+\item[$\bullet$] la valuation de l'union \UnionRule des non-terminaux
   $N_1$ et $N_2$ est le minimum des valuations de $N_1$ et de $N_2$;
 \item[$\bullet$] la valuation d'un produit des non-terminaux $N_1$
   et $N_2$ est la somme des valuations de $N_1$ et de $N_2$; Par ailleurs,
-  la valuation du \texttt{BoxProduct} est au minimum de 1.
+  la valuation du \BoxProdRule est au minimum de 1.
 \end{itemize}
 
 Pour la calculer, on utilise l'algorithme de point fixe suivant. On part de la
@@ -643,7 +681,7 @@ $$\begin{array}{|c|ccc|}
   terminaux.
 \item Écrire un fonction \texttt{init\_grammar} qui prend en paramètre une
   grammaire, qui appelle sur chaque règle de la grammaire la méthode
-  \verb+set_grammar+ et qui implante l'algorithme de calcul de la valuation. 
+  \verb+set_grammar+ et qui implante l'algorithme de calcul de la valuation.
 \end{asks}
 
 \subsection{Comptage naïf du nombre d'objets}
@@ -654,20 +692,20 @@ Soit $N$ un non-terminal. On note $C_N(i)$ le nombre d'objet de poids $i$.
 On rappelle que le nombre de manière de répartir $n$ étiquette en deux sous
 ensemble de taille $k$ et $l=n-k$ est $\binom{n}{k} = \frac{n!}{k!\,l!}$.
 \begin{itemize}
-\item[$\bullet$] si $N$ est un \texttt{Singleton} alors $C_N(1) = 1$ et $C_N(i)
+\item[$\bullet$] si $N$ est un \SingletonRule alors $C_N(1) = 1$ et $C_N(i)
   = 0$ si $i$ est différent de $1$;
-\item[$\bullet$] si $N$ est un \texttt{Epsilon} alors alors $C_N(0) = 1$ et
+\item[$\bullet$] si $N$ est un \EpsilonRule alors alors $C_N(0) = 1$ et
   $C_N(i) = 0$ si $i$ est différent de $0$;
-\item[$\bullet$] si $N$ est l'union \texttt{Union} des non-terminaux $N_1$ et
+\item[$\bullet$] si $N$ est l'union \UnionRule des non-terminaux $N_1$ et
   $N_2$ alors
   $$C_N(i) = C_{N_1}(i) + C_{N_2}(i)\,;$$
-\item[$\bullet$] si $N$ est le produit \texttt{Prod} des non-terminaux $N_1$ et
+\item[$\bullet$] si $N$ est le produit \ProductRule des non-terminaux $N_1$ et
   $N_2$
   $$C_N(i) = \sum_{k+l=i} \binom{n}{k} C_{N_1}(k) \cdot C_{N_2}(l)\,;$$
-\item[$\bullet$] si $N$ est le produit \texttt{OrdP} des non-terminaux $N_1$ et
+\item[$\bullet$] si $N$ est le produit \OrdProdRule des non-terminaux $N_1$ et
   $N_2$
   $$C_N(i) = \sum_{k+l=i} C_{N_1}(k) \cdot C_{N_2}(l)\,;$$
-\item[$\bullet$] si $N$ est le produit \texttt{BoxP} des non-terminaux $N_1$ et
+\item[$\bullet$] si $N$ est le produit \BoxProdRule des non-terminaux $N_1$ et
   $N_2$
   $$C_N(i) = \sum_{k+l=i\ \text{and}\ k \geq 1}
   \binom{n-1}{k-1} C_{N_1}(k) \cdot C_{N_2}(l)\,;$$
@@ -680,26 +718,26 @@ ensemble de taille $k$ et $l=n-k$ est $\binom{n}{k} = \frac{n!}{k!\,l!}$.
 
 \subsubsection{À faire:}
 \begin{asks}
-\item Implanter pour chaque règle de grammaire une méthode
-  \texttt{count} qui compte le nombre d'objets d'une grammaire dérivant
-  d'un non-terminal et d'un poids donné.
+\item Implanter pour chaque règle de grammaire une méthode \cnt qui compte le
+  nombre d'objets d'une grammaire dérivant d'un non-terminal et d'un poids
+  donné.
 \end{asks}
 
 
 \subsection{Calcul de la liste des objets}
 
-On applique récursivement les définitions des constructeurs
-\texttt{Singleton}, \texttt{Epsilon}, \texttt{Union} et \texttt{Prod} pour
-construire la liste des objets de taille $i$. 
+On applique récursivement les définitions des constructeurs \SingletonRule,
+\EpsilonRule, \UnionRule, \ProductRule, \BoxProdRule et \OrdProdRule pour
+construire la liste des objets de taille $i$.
 
 \subsubsection{Singleton et Epsilon}
 
-Dans le cas des règles constantes, on vérifiera si la taille de la liste
-des étiquettes
-correspond à l'unique taille engendrée par la règle (1 pour Singleton, 0
-pour Epsilon) et le cas échéant, on engendra cet objet unique. Pour Singleton,
-il faudra utiliser la fonction de création de l'objet en fonction de l'étiquette.
-Pour Epsilon, l'objet est stocké dans la classe.
+Dans le cas des règles constantes, on vérifiera si la taille de la liste des
+étiquettes correspond à l'unique taille engendrée par la règle (1 pour
+\SingletonRule, 0 pour \EpsilonRule) et le cas échéant, on engendra cet objet
+unique. Pour \SingletonRule, il faudra utiliser la fonction de création de
+l'objet en fonction de l'étiquette.  Pour \EpsilonRule, l'objet est stocké
+dans la classe.
 
 \subsubsection{Union}
 
@@ -709,38 +747,40 @@ en paramètre.
 
 \subsubsection{Produit}
 
-La difficulté principale 
-vient des différents produits car on doit dans ce cas décider en plus de
-la répartition des étiquettes. 
+La difficulté principale vient des différents produits car on doit dans ce cas
+décider en plus de la répartition des étiquettes.
 
-Pour chaque produit, on écrira une méthode {\tt iter\_label} qui prend 
-en paramètre un entier $k$ et une liste de labels $\ell$ et qui itère
-selon toutes les façons de diviser la liste $\ell$ en $k$ éléments d'un côté et $n-k$ éléments de 
-l'autre selon les règles particulières du produit décrite en Section~\ref{seq:product}.
+Pour chaque produit, on écrira une méthode \texttt{iter\_label} qui prend en
+paramètre un entier $k$ et une liste de labels $\ell$ et qui itère selon
+toutes les façons de diviser la liste $\ell$ en $k$ éléments d'un côté et
+$n-k$ éléments de l'autre selon les règles particulières du produit décrite en
+Section~\ref{seq:product}.
 
 Exemples :
 \begin{itemize}
-\item la méthode \texttt{iter\_label([1,2,3],2)} sur le produit classique doit engendrer les 
-découpages suivants : $([1,2], [3]), ([1,3], [2]), ([2,3], [1])$.
-\item la méthode \texttt{iter\_label([1,2,3],2)} sur le produit box doit engendrer les 
-découpages suivants : $([1,2], [3]), ([1,3], [2])$.
-\item la méthode \texttt{iter\_label([1,2,3],2)} sur le produit ordonné doit engendrer l'unique
-découpage : $([1,2], [3])$.
+\item la méthode \texttt{iter\_label([1,2,3],2)} sur le produit classique doit
+  engendrer les découpages suivants : $([1,2], [3]), ([1,3], [2]), ([2,3],
+  [1])$.
+\item la méthode \texttt{iter\_label([1,2,3],2)} sur le produit box doit
+  engendrer les découpages suivants : $([1,2], [3]), ([1,3], [2])$.
+\item la méthode \texttt{iter\_label([1,2,3],2)} sur le produit ordonné doit
+  engendrer l'unique découpage : $([1,2], [3])$.
 \end{itemize}
 
-L'algorithme de création des objets est ensuite le même pour tous les produits. 
-Pour calculer le produit de deux ensembles $E_1$ et $E_2$ : pour toutes les valeurs
-de $k$ en fonction des valuations de $E_1$ et $E_2$, pour tous les découpages possible 
-de {\tt iter\_label}, pour tous les objets $e_1$ de $E_1$ de taille $k$ et pour tous
-les objets $e_2$ de $E_2$ de taille $n-k$, on créera l'objet formé de $e_1$ et $e_2$
-grâce à la fonction de création stockée dans la classe.
+L'algorithme de création des objets est ensuite le même pour tous les
+produits.  Pour calculer le produit de deux ensembles $E_1$ et $E_2$ : pour
+toutes les valeurs de $k$ en fonction des valuations de $E_1$ et $E_2$, pour
+tous les découpages possible de \texttt{iter\_label}, pour tous les objets
+$e_1$ de $E_1$ de taille $k$ et pour tous les objets $e_2$ de $E_2$ de taille
+$n-k$, on créera l'objet formé de $e_1$ et $e_2$ grâce à la fonction de
+création stockée dans la classe.
 
 
 
 \subsection{Calcul du $i$-ème élément : la méthode \texttt{unrank}}
 
 Pour calculer l'élément de taille $n$ et de rang $i$, on fait appel à la
-méthode \texttt{unrank}. Voici par exemple l'arbre dont les feuilles
+méthode \unrank. Voici par exemple l'arbre dont les feuilles
 sont étiquetées par $[1,2,3,4,5,6]$ de rang $12$.
 \begin{verbatim}
 >>> TreeLabelLeaves["Tree"].unrank([1,2,3,4,5,6],12)
@@ -748,54 +788,188 @@ sont étiquetées par $[1,2,3,4,5,6]$ de rang $12$.
 \end{verbatim}
 \textbf{Attention ! La numérotation commence à zéro.}
 
+\newcommand{\Rep}[2]{\operatorname{Rep}_{\texttt{#1}}^{#2}}
 On procédera récursivement comme suit:
 \begin{itemize}
 \item si l'on demande un objet dont le rang est supérieur au nombre d'objet on
   lève une exception \texttt{ValueError}.
-\item dans le cas \texttt{EpsilonRule} ou \texttt{SingletonRule}, on retourne
+\item dans le cas \EpsilonRule ou \SingletonRule, on retourne
   l'objet.
 \item dans le cas d'une union: \texttt{"U" : UnionRule("A", "B")}, on suppose
   connu les nombres d'objets: $C_U(n) = C_A(n) + C_B(n)$. Alors l'objet de $U$
-  de rang $i$ est l'objet de $A$ de rang $i$ si $i<C_A(n)$ et l'objet de $B$
-  de rang $i-C_A(n)$ sinon.
-\item \todo{UPDATE} dans le cas d'un produit: \texttt{"U" : ProductRule("A", "B")}, on suppose
-  connu les nombres d'objets:
-  $$
-  C_U(n) = \sum_{i=0}^n C_A(i)\,C_B(n-i)\,.
-  $$
-  En s'inspirant de l'union, on calcule la valeur de $i$:
-  $$
-  U(n) = \bigsqcup_{i=0}^n A(i) \times B(n-i)\,.
-  $$
-  Il reste finalement à trouver l'élément de rang $j$ d'un produit cartésien
-  d'ensemble $A\times B$ où $A=\{a_1,\dots,a_k\}$ est de cardinalité $k$ et
-  $B=\{b_1,\dots,b_l\}$ est de cardinalité $l$. Si l'on choisi comme ordre
-  d'énumération
-  $$
-  A\times B =\{(a_1, b_1), (a_1, b_2), \dots, (a_1, b_l),
-               (a_2, b_1), \dots, (a_2, b_l),
-               \ \dots\ ,
-               (a_k, b_1), \dots, (a_k, b_l)\}
-  $$
-  alors l'élément $j$ est $(a_{r}, b_{q})$ où $q$ et $r$ sont respectivement
-  le quotient et le reste de la division euclidienne de $j$ par $k$.
+  de rang $r$ est l'objet de $A$ de rang $r$ si $r<C_A(n)$ et l'objet de $B$
+  de rang $r-C_A(n)$ sinon.
+\item Les produits se traitent de manière similaire les uns des autres. On
+  rappelle que tous les produits \texttt{"U" : P("A", "B")} sont donnés
+  par une règle de la forme suivante où $E$ est un ensemble d'étiquettes de
+  taille $n$:
+  \begin{equation}\label{eq.decprod}
+  U(E) = \bigsqcup_{i=0}^n\left(
+      \bigsqcup_{(F, G) \in\Rep{PRule}{i}(E)} (A(F), B(G))\right)\,,
+  \end{equation}
+  où la deuxième union disjointe s'étend à l'ensemble $\Rep{P}{i}(E)$ de
+  toutes les manières de répartir en accord avec la règle \texttt{P} les
+  étiquettes de $E$. Formellement, c'est l'ensemble des couples $(F, G)$ de
+  sous ensemble de $E$
+  \begin{enumerate}
+  \item $F$ et $G$ sont complémentaire dans $E$, c'est-à-dire $F\sqcup G = E$;
+  \item $\#(F)=i$ (et donc $\#(G) = n-1$);
+  \item $(F,G)$ est «admissible» pour le produit \texttt{P} considéré.
+  \end{enumerate}
+  Par exemple, dans le cas \texttt{"U" : BoxProdRule("A", "B")}, $(F, G)$ est
+  admissible si $F$ contient le plus petit élément de $E$.
+  \bigskip
 
-  Par exemple, pour les arbre de taille $7$:
+  On connaît la taille $P_n(i)$ de $\Rep{P}{i}(E)$. C'est $1$ pour
+  \OrdProdRule, $\binom{n}{i}$ pour \ProductRule et $\binom{n-1}{i-1}$ pour
+  \BoxProdRule. On suppose de plus que l'on a implémenté\footnote{voir
+    l'algorithme du cours pour les mots binaires ayant un nombre fixé de bits à
+    $1$.} une fonction de $\texttt{UnrankP(E, i)}$ pour les éléments de
+  $\Rep{P}{i}(E)$.
+
+
+  En s'inspirant de l'union, on calcule la valeur de $i$, puis la manière de
+  répartir les étiquettes entre $A$ et $B$. En effet, l'équation
+  \ref{eq.decprod} ci-dessus donne:
+  \begin{equation}
+    C_U(n) = \sum_{i=0}^n P_n(i)\,C_A(i)\,C_B(n-i)\,.
+  \end{equation}
+  On suppose donc que $0\leq r<C_u(n)$, on veut calculer
+  $\texttt{Unrank}_U(n,r)$. On note
   $$
-  \begin{array}{|c|cccccccc|}
-    \hline
-    i           & 0&  1&  2&  3&  4&  5&  6& 7\\
-    \hline
-    C_A(i)\ C_B(n-i)  & 0& 42& 14& 10& 10& 14& 42& 0\\
-    \hline
-  \end{array}
+  S_i := \sum_{j=0}^{i-1} P_n(j)\,C_A(j)\,C_B(n-j).
   $$
-  Ainsi, si l'on veut l'arbre de rang $73$, comme $73 = 0+42+14+10+7$. On
-  prendra $i=4$ et l'on retournera l'arbre de rang $j=7$ du produit cartésien
-  $\texttt{Tree}(4) \times \texttt{Tree}(7-4)$...  On a maintenant $j=7$,
-  $k=5$, $l=2$. On retournera donc l'arbre \texttt{Node(u,v)} où $u$ est
-  l'arbre de taille $4$ et de rang $2$ et $v$ l'arbre de taille $3$ de rang
-  $1$.
+  On va procéder en trois étapes
+  \begin{enumerate}
+  \item Calcul de $i$;
+  \item Calcul de la répartition des étiquettes entre $A$ et $B$;
+  \item Calcul du rang des objets dérivant de $A$ et $B$.
+  \end{enumerate}
+  \paragraph{Remarque:}
+  Selon l'ordre choisi pour l'énumération, l'ordre des étapes précédentes peut
+  varier.
+  \bigskip
+
+  \begin{enumerate}
+  \item Avec une boucle, on calcule la valeur de $i$ telle que
+    \begin{equation}
+      S_i \leq r < S_{i+1}\,.
+    \end{equation}
+  \item On doit donc maintenant calculer l'élément de rang $r' := r-S_i$ dans
+    l'ensemble
+    \begin{equation}
+      \bigsqcup_{(F, G) \in\Rep{PRule}{i}(E)} (A(F), B(G))\,.
+    \end{equation}
+    Tous ensembles de cette union ont le même cardinal à savoir
+    $C_A(i)\,C_B(n-i)$. Soit $q_E$ le quotient de la division de $r'$ par
+    $C_A(i)\,C_B(n-i)$ et $r_E$ le reste. On pose
+    \begin{equation}
+      (F, G) = \texttt{UnrankP}(E,q_e)\,,
+    \end{equation}
+    et l'élément cherché est
+    \begin{equation}
+      \texttt{Unrank}_U(n,r) = \texttt{Unrank}_{A(F)\times B(G)}(r_e)\,.
+    \end{equation}
+  \item C'est un produit cartésien simple, on peut donc appliquer la méthode
+    vue en cours: on cherche l'élément de rang $r_e$ d'un produit cartésien
+    d'ensemble $A(F)\times B(G)$ où $A(F)=\{a_1,\dots,a_k\}$ est de
+    cardinalité $k$ et $B(G)=\{b_1,\dots,b_l\}$ est de cardinalité $l$. Si
+    l'on choisi comme ordre d'énumération
+    \begin{multline*}
+      A(F)\times B(G) = \\ \{(a_1, b_1), (a_1, b_2), \dots, (a_1, b_l), (a_2,
+      b_1), \dots, (a_2, b_l), \ \dots\ , (a_k, b_1), \dots, (a_k, b_l)\}
+    \end{multline*}
+    alors l'élément $j$ est $(a_{Q}, b_{R})$ où $Q$ et $R$ sont respectivement
+    le quotient et le reste de la division euclidienne de $r_e$ par $l$.
+    On trouve ainsi:
+    \begin{equation}
+      \texttt{Unrank}_U(n,r) =
+      \left(\texttt{Unrank}_{A(F)}(Q), \texttt{Unrank}_{B(G)}(R)\right)\,,
+    \end{equation}
+    où $Q$ et $R$ sont les quotients et reste de la division de $r_e$ par
+    $C_B(\#(G)) = C_B(n-i)$.
+  \end{enumerate}
+
+\subsection{Exemple de produit}
+
+On donne un exemple de \BoxProdRule. C'est le cas le plus difficile, les
+autres se traitent de manière similaire. On considère, dans cet exemple, la
+grammaire suivante:
+\medskip
+
+\begin{verbatim}
+ExBoxProd = {
+    "BoxProduct": BoxProdRule("List", "List", lambda a,b: (a,b)),
+    "List": UnionRule("Empty","NonEmpty"),
+    "NonEmpty": ProductRule("Letter","List",lambda l1,l2:l1+l2),
+    "Letter": SingletonRule(lambda x:[x]),
+    "Empty": EpsilonRule([])
+}
+\end{verbatim}
+\bigskip
+
+On veut calculer
+\begin{verbatim}
+>>> ExBoxProd["BoxProduct"].unrank(range(7), 3351)
+([0, 6, 2], [4, 3, 5, 1])
+\end{verbatim}
+\bigskip
+
+Voici le détail du traitement de la règle:
+\begin{verbatim}
+    "BoxProduct": BoxProdRule("List", "List", lambda a,b: (a,b)),
+\end{verbatim}
+
+Récursivement, on obtient les cardinaux suivants:
+\newcommand{\ttl}{\texttt{List}}
+$$
+\begin{array}{|c|cccccccc|}
+  \hline
+  i            &    0 &   1 &   2 &   3 &   4 &   5 &   6 &  7  \\
+  \hline
+  P_7(i)       &    0 &   1 &   6 &  15 &  20 &  15 &   6 &    1\\
+  C_\ttl(i)     &    1 &   1 &   2 &   6 &  24 & 120 & 720 & 5040\\
+  C_\ttl(7-i)   & 5040 & 720 & 120 &  24 &   6 &   2 &   1 &    1\\
+  P_7(i)\,C_\ttl(i)\,C_\ttl(7-i)
+               &    0 & 720 & 1440& 2160& 2880& 3600& 4320& 5040\\
+  \hline
+  S_i          &      & 0   & 720 & 2160& 4320& 7200&10800& 15120\\
+  \hline
+\end{array}
+$$
+Voici les trois étapes:
+\begin{enumerate}
+\item Donc, si l'on veux calculer l'élément de rang $r=3351$, avec
+  l'encadrement $2160 \leq r < 4320$, on trouve $i=3$. On sait donc qu'il y a
+  $3$ étiquettes à gauche et $4$ à droite et que l'on cherche l'élément de
+  rang $r' = 3351 - 2160 = 1191$.
+\item Pour toute répartition $(F, G)$ où $\#(F) = 3$ et $\#(G)=4$, il y a
+  $C_\ttl(3)C_\ttl(4)= 144$, solution possible. On a $Q_E = 8$ et $R_E=39$.
+  Voici l'ordre choisi pour la liste des choix (l'élément $0$ qui est
+  obligatoirement à gauche n'appairaît pas):
+\begin{verbatim}
+>>> list(iter_choose([1,2,3,4,5,6], 2)))
+\end{verbatim}
+  \begin{gather*}
+    (12,3456)(13,2456)(14,2356)(15,2346)(16,2345)(23,1456)(24,1356)(25,1346)\\
+    (26,1345)(34,1256)(35,1246)(36,1245)(45,1236)(46,1235)(56,1234)
+  \end{gather*}
+  On considère l'élément $Q_E=8$ de cette liste (qui commence à $0$) et donc
+  $F = \{0, 2, 6\}$ et $G = \{1,3,4,5\}$
+\item De $R_E=39$ et $C_\ttl(4)=24$ on en déduit $Q=1$ et $R=15$. L'élément
+  cherché est donc obtenu par
+\begin{verbatim}
+>>> ExBoxProd["List"].unrank([0,2,6], 1)
+[0, 6, 2]
+>>> ExBoxProd["List"].unrank([1,3,4,5], 15)
+[4, 3, 5, 1]
+\end{verbatim}
+D'où le résultat:
+\begin{verbatim}
+>>> ExBoxProd["BoxProduct"].unrank(range(7), 3351)
+([0, 6, 2], [4, 3, 5, 1])
+\end{verbatim}
+\end{enumerate}
 \end{itemize}
 
 \section{Pour rendre le programme plus sûr, efficace utilisable}
@@ -871,5 +1045,3 @@ des classes les informations nécéssaires à l'analyse des objets. En particuli
 \hskip10cm{\Large\bf Bon Travail !}
 
 \end{document}
-
-
