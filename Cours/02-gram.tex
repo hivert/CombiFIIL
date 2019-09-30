@@ -49,22 +49,43 @@
 %***********************************************************************
 \frame{\titlepage}
 %***********************************************************************
+\begin{frame}{Résumé des épisodes précédents}
+
+  On a vu sur des exemples (mots binaires, permutations) plusieurs technique
+  pour résoudre les questions classiques de la génération combinatoire:
+  \begin{itemize}
+  \item Énumération lexicographique;
+    \medskip
+
+  \item Décomposition récursive;
+    \medskip
+
+  \item itération vs listage pour gagner en complexité.
+  \end{itemize}
+  \pause\bigskip\bigskip
+
+  \begin{center}
+    \textbf{\Large Solution \textit{ad hoc}
+      $\Longrightarrow$ solution générique}
+  \end{center}
+\end{frame}
+
 \begin{frame}{Objectifs : algorithmes génériques}
 
   \begin{itemize}
-  \item \textbf{Identifier les composants de base:}
+  \item Identifier les \textbf{composants de base:}
     \medskip
 
     $\Longrightarrow$ Singleton, union, produit cartésien, ensemble et
     multiensemble\dots \pause\bigskip
 
-  \item Comprendre comment composer les briques de base
+  \item Comprendre comment \textbf{composer} les briques de base:
     \medskip
 
     $\Longrightarrow$ grammaire de description, classe combinatoire
     \bigskip
 
-  \item $\Longrightarrow$ Algorithmes génériques
+  \item $\Longrightarrow$ \textbf{Algorithmes génériques} !
   \end{itemize}
 \end{frame}
 
@@ -147,9 +168,9 @@
   \end{verse}
   \pause\bigskip
 
-  \begin{itemize}
-  \item Unions disjointes récursives
-  \end{itemize}
+  \begin{center}
+  \bf\LARGE Unions disjointes récursives
+  \end{center}
 \end{frame}
 
 \begin{frame}{Les chaînes de $n$-bits ayant $k$-bits à $1$}
@@ -290,20 +311,21 @@ def unrank_BSnk(n, k, i):
 
 \begin{frame}{Perte de synchronisation en codage NRZ}
 
-  S'il on envoie une suite trop longue de bits identiques, le récepteur ne
-  peut plus se basé sur les transistions pour se synchroniser. Il risque de
-  perdre la synchronisation avec l'émetteur.  \medskip
+  Si on envoie une suite trop longue de bits identiques, le récepteur ne
+  voit un signal constant. Il ne peut plus se baser sur les transitions pour
+  se synchroniser et risque de perdre la synchronisation avec l'émetteur.
+  \medskip
 
   \begin{definition}
     Une séquence de longueur $n$ est dite {\red non-repétitive d'ordre $k$}
-    (abréviation $NR(k, n)$) si elle ne contient pas se séquence de plus de
+    (abréviation $NR_k(n)$) si elle ne contient pas se séquence de plus de
     $k$ bits identiques consécutifs.
   \end{definition}
-  Notation: $NR(k, n, c, i)$ les suites qui commencent par au plus $c$ $i$:
+  On note $NR_k(n, c, i)$ les suites qui commencent par au plus $c$ $i$:
   \begin{itemize}
-  \item $NR(k, n, 0, 0) = 1 \cdot NR(k, n-1, k-1, 1)$
-  \item $NR(k, n, c, 0) = 0 \cdot NR(k, n-1, c-1, 0) \sqcup 
-               1 \cdot NR(k, n-1, k-1, 1)$
+  \item $NR_k(n, 0, 0) = 1 \cdot NR_k(n-1, k-1, 1)$
+  \item $NR_k(n, c, 0) = 0 \cdot NR_k(n-1, c-1, 0)\ \sqcup\ 
+               1 \cdot NR_k(n-1, k-1, 1)$
              \item Idem en échangeant les rôles de $0$ et $1$.
   \end{itemize}
 \end{frame}
@@ -686,3 +708,8 @@ Dans cet exemple: plus simple, on inclut la lettre dans l'état:
 \end{frame}
 
 \end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:
