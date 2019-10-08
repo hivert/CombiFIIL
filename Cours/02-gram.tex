@@ -401,23 +401,33 @@ def unrank_BSnk(n, k, i):
   \end{definition}
   \pause\bigskip
 
-  Alors:
   \begin{itemize}
-  \item $\Count(C) = \Count(A)\cdot\Count(B)$
+  \item $\Count(C) = \Count(A)\cdot\Count(B) = k\cdot\ell$
   \item On peut prendre la liste dans l'ordre lexicographique:
-    \begin{align*}
-      \List(C) = [&(a_0, b_0), (a_0, b_1), (a_0, b_2),\dots, (a_0, b_l),\\
-                  &(a_1, b_0), (a_1, b_1), (a_1, b_2),\dots, (a_1, b_l),\\
-                  &(a_2, b_0), (a_2, b_1), (a_2, b_2),\dots, (a_2, b_l),\\
-                  &\hspace{2.7cm}\dots\hspace{2.7cm}].
-    \end{align*}
+    \[\begin{array}{rrccccl}
+      \List(C) = [&(a_0, b_0)& (a_0, b_1)& (a_0, b_2)&\cdots&(a_0, b_{\ell-1})&\\
+                  &(a_1, b_0)& (a_1, b_1)& (a_1, b_2)&\cdots&(a_1, b_{\ell-1})&\\
+                  &(a_2, b_0)& (a_2, b_1)& (a_2, b_2)&\cdots&(a_2, b_{\ell-1})&\\
+                  &\vdots&\vdots& \vdots  &\ddots&   \vdots&]\\
+    \end{array}\]
+    % \begin{align*}
+    %   \List(C) = [&(a_0, b_0), (a_0, b_1), (a_0, b_2),\ \dots,\ (a_0, b_{\ell-1}),\\
+    %               &(a_1, b_0), (a_1, b_1), (a_1, b_2),\ \dots,\ (a_1, b_{\ell-1}),\\
+    %               &(a_2, b_0), (a_2, b_1), (a_2, b_2),\ \dots,\ (a_2, b_{\ell-1}),\\
+    %               &\hspace{3cm}\dots\hspace{3cm}].
+    % \end{align*}
   \end{itemize}
 \end{frame}
 
 \begin{frame}[fragile]{Itération sur un produit cartésien}
-
   Ordre lexicographique:
-  \bigskip
+    \[\begin{array}{ccccc}
+      (a_0, b_0)& (a_0, b_1)& (a_0, b_2)&\cdots&(a_0, b_{\ell-1})\\
+      (a_1, b_0)& (a_1, b_1)& (a_1, b_2)&\cdots&(a_1, b_{\ell-1})\\
+      (a_2, b_0)& (a_2, b_1)& (a_2, b_2)&\cdots&(a_2, b_{\ell-1})\\
+      \vdots&\vdots& \vdots  &\ddots&   \vdots\\
+      (a_{k-1},b_0)& (a_{k-1},b_1)&(a_{k-1},b_2)&\cdots&(a_{k-1},b_{\ell-1})\\
+      \end{array}\]
 
   Itération en Python:
 \begin{listing}{1}
@@ -429,9 +439,6 @@ def unrank_BSnk(n, k, i):
 \end{frame}
 
 \begin{frame}[fragile]{$\First, \Next$ sur un produit cartésien}
-
-  Ordre lexicographique:
-  \bigskip
 \begin{listing}{1}
     def first_cartprod(A, B):
         return (A.first(), B.first())
@@ -447,9 +454,6 @@ def unrank_BSnk(n, k, i):
 
 
 \begin{frame}[fragile]{$\Rank$ sur un produit cartésien}
-
-  Ordre lexicographique:
-  \bigskip
 \begin{listing}{1}
     def rank_cartprod(A, B, x):
         (a , b) = x      # pattern matching
@@ -492,7 +496,7 @@ def unrank_BSnk(n, k, i):
   Alors:
   \begin{itemize}
   \item $\mC.\Count(n) = \mA.\Count(n) + \mB.\Count(n)$
-  \item On peut prendre: $\mC.\List(n) = \Concat(\mA.\List(b), \mB.\List(n))$
+  \item On peut prendre: $\mC.\List(n) = \Concat(\mA.\List(n), \mB.\List(n))$
   \end{itemize}
   \bigskip\pause
 
