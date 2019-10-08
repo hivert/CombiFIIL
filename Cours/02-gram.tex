@@ -572,10 +572,11 @@ def unrank_BSnk(n, k, i):
 \begin{verbatim}
     if n == 0:
         yield arbreVide()
-    for i in range(n):
-        for g in BinTree(i):
-            for d in BinTree(n-1-i):
-                yield Noeud(g,d)
+    else:
+        for i in range(n):
+            for g in BinTree(i):
+                for d in BinTree(n-1-i):
+                    yield Noeud(g, d)
 \end{verbatim}
   \end{ALGO}
 \end{frame}
