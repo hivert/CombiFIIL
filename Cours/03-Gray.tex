@@ -59,9 +59,10 @@
   \bigskip
 
   \begin{NOTE}
-    Les algorithmes d'itérations vue en cours sont pour la plupart en temps
-    constant amorti (CAT). On peut trouver des algoritmes réellement en temps
-    constant ! Pour ceci, il faut changer l'ordre d'énumération.
+    Les algorithmes d'itérations vue en cours sont pour la plupart en {\red
+      temps constant amorti} (CAT). On peut trouver des algoritmes réellement
+    en {\green temps constant} ! Pour ceci, il faut \textbf{changer l'ordre
+      d'énumération}.
   \end{NOTE}
 \end{frame}
 
@@ -141,7 +142,7 @@
   \begin{NOTE}
     Une formule étonnamment simple
     \[G = i \oplus (i \gg 1)\]
-    où $\oplus$ désigne le Ou-Exclusif bit à bit. 
+    où $\oplus$ désigne le Ou-Exclusif bit à bit.
   \end{NOTE}
 \end{frame}
 
@@ -161,7 +162,8 @@ Idée: noter la position du prochain zéro:
 i      &  7 & 6 & 5 & 4 & 3 & 2 & 1 & 0 \\\hline
 b_i    &  1 & 0 & 1 & 1 & 1 & 0 & 1 & 0 \\
 \Pos_i &  8 & 6 & 5 & 4 & 6 & 2 & 2 & 0 \\
-\end{array}\]
+  \end{array}\]
+Note: on complète par un $0$ en tête si nécessaire.
 \end{frame}
 
 \begin{frame}{Passage d'une liste de bits à la suivante en temps constant}
@@ -202,17 +204,17 @@ n & \Bin & \Pos  &  \Pos_0 & \Gray \\\hline
 \begin{frame}{Algorithme de Steinhaus-Johnson-Trotter}
 
   \begin{NOTE}
-    Idée: récursivement insérer $n$ à toute les places possible en alternant
-    le sens de déplacement.
+    Idée: récursivement insérer $n$ à toute les places possibles en alternant
+    le sens de déplacement, d'une permutation à l'autre.
   \end{NOTE}
   \bigskip
-  \[\begin{array}{c||cccc}
-   123 &  1234 & 1243 & 1423 & 4123 \\
-   132 &  4132 & 1432 & 1342 & 1324 \\
-   312 &  3124 & 3142 & 3412 & 4312 \\
-   321 &  4321 & 3421 & 3241 & 3214 \\
-   231 &  2314 & 2341 & 2431 & 4231 \\
-   213 &  4213 & 2413 & 2143 & 2134 \\
+  \[\begin{array}{c|c|cccc}
+   123 & < & 123{\bf4} & 12{\bf4}3 & 1{\bf4}23 & {\bf4}123 \\
+   132 & > & {\bf4}132 & 1{\bf4}32 & 13{\bf4}2 & 132{\bf4} \\
+   312 & < & 312{\bf4} & 31{\bf4}2 & 3{\bf4}12 & {\bf4}312 \\
+   321 & > & {\bf4}321 & 3{\bf4}21 & 32{\bf4}1 & 321{\bf4} \\
+   231 & < & 231{\bf4} & 23{\bf4}1 & 2{\bf4}31 & {\bf4}231 \\
+   213 & > & {\bf4}213 & 2{\bf4}13 & 21{\bf4}3 & 213{\bf4} \\
   \end{array}\]
   Voir code Python\dots
 \end{frame}
