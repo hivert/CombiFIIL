@@ -13,7 +13,7 @@
 \begin{enumerate}
 \item Tout d'abord, assurez vous que vous avez bien récupéré le fichier \lsti{mots_binaires.cpp} ainsi que le fichier \lsti{Makefile} dans un même dossier. Ouvrez un terminal, rendez-vous dans le bon répertoire, et vérifiez que le fichier compile avec la commande \lsti{make mots_binaires}.
 
-\item Lancez l'exécution suivante \lsti{./mots_binaires 5}, une liste de nombre apparaît : \lsti{Result: 1 5 10 10 5 1}. Ce sont les nombres de mots binaires de taille 5 regroupés par leur nombre de bits à 1. On lit la suite de cette façon : il existe
+\item Lancez l'exécution suivante \lsti{./mots_binaires 5}, une liste de nombre apparaît : \[\lsti{Result: 1 5 10 10 5 1}\] Ce sont les nombres de mots binaires de taille 5 regroupés par leur nombre de bits à 1. On lit la suite de cette façon : il existe
 \begin{itemize}
 \item 1 mot binaire de taille 5 avec 0 bit à 1
 \item 5 mots binaires de taille 5 avec 1 bit à 1
@@ -25,7 +25,8 @@
 
 \item Ouvrez le fichier \lsti{mots_binaires.cpp} et regardez rapidement le code qu'il contient, en particulier, observez la fonction \lsti{motsbin_classique} pour en comprendre le fonctionnement.
 
-\item Complétez la fonction \lsti{motsbins_parall} : l'algorithme doit être \textbf{le même} que \lsti{motsbin_classique} mais les appels récursifs doivent se faire en parallèle avec \lsti{cilk_spawn}.
+\item Complétez la fonction \lsti{motsbins_parall} : l'algorithme doit être
+  \textbf{le même} que celui de \lsti{motsbin_classique} mais les appels récursifs doivent se faire en parallèle avec \lsti{cilk_spawn}.
 
 Appel classique
 
@@ -132,16 +133,19 @@ et \lsti{./perm_generation 5} qui doit afficher
 
 \lsti{Result: 1 26 66 26 1 0 0 0 0 0 0 0 0 0 0 0}.
 
-\item Complétez la fonction \lsti{descentes_all_permutations_parall}. C'est la \textit{même chose} que \lsti{descentes_all_permutations_classique} mais simplement maintenant les appels récursifs doivent être lancés avec \lsti{cilk_spwan} pour utiliser le calcul en parallèle. 
+\item Complétez la fonction \lsti{descentes_all_permutations_parall}. C'est la
+  \textit{même chose} que la fonction \lsti{descentes_all_permutations_classique} mais les appels récursifs doivent être lancés avec \lsti{cilk_spwan} pour utiliser le calcul en parallèle. 
 
-Testez votre implantation en compilant puis en lançant la commande \lsti{./perm_generation -n 8 4} qui doit afficher le même résultat que \lsti{./perm_generation 4}.
+Testez votre implantation en compilant puis en lançant la nouvelle commande \lsti{./perm_generation -n 8 4} qui doit afficher le même résultat que \lsti{./perm_generation 4}.
 
 \item Ouvrez un autre terminal et lancez la commande \lsti{top} puis sur le premier terminal, lancez \lsti{./perm_generation -n 8 13}, vous devez voir apparaître votre programme dans la liste des tâche en cours et l'utilisation du processeur doit se rapprocher de 800\%.
 
-\item Comparez les temps d'exécution de \lsti{time ./perm_generation -n 8 13} et \lsti{time ./perm_generation -n 1 13}. Vous remarquez que le passage en parallèle n'améliore pas les performances. En effet, l'appel d'une fonction avec \lsti{cilk_spawn} est 4  à 5 fois plus long que l'appel d'une fonction classique. Ici, nous faisons de la \textit{sur-parallélisation} : nous appelons \lsti{cilk_spawn} sur de trop nombreuses fonctions pour des calculs trop petits. Pour y remédier, on propose de passer en calcul classique pour les "petites valeurs de $n$". 
+\item Comparez les temps d'exécution grâce aux commandes \lsti{time ./perm_generation -n 8 13} et \lsti{time ./perm_generation -n 1 13}. Vous remarquez que le passage en parallèle n'améliore pas les performances. En effet, l'appel d'une fonction avec \lsti{cilk_spawn} est 4  à 5 fois plus long que l'appel d'une fonction classique. Ici, nous faisons de la \textit{sur-parallélisation} : nous appelons \lsti{cilk_spawn} sur de trop nombreuses fonctions pour des calculs trop petits. Pour y remédier, on propose de passer en calcul classique pour les «~petites valeurs de $n$~». 
 
 \item Modifiez la fonction \lsti{descentes_all_permutations_parall} pour n'appeler \lsti{cilk_spawn} uniquement si $n > 5$ (sinon, on fera des appels récursifs classiques). Testez à nouveau les performances puis cherchez à modifier cette limite arbitraire de 5 pour optimiser les performances du programme.
 
+\item Pour aller encore plus vite, on peut dé-recursiver pour les petites
+  valeurs de $n$... 
 \end{enumerate}
 
 \end{exercice}
