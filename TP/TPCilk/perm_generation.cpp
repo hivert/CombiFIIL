@@ -10,7 +10,7 @@
 using namespace std;
 
 /**********************************************************************/
-/************** Défnitions des types et convertisseurs ****************/
+/************* Définitions des types et convertisseurs ****************/
 /**********************************************************************/
 
 /** type tableau classique
@@ -109,10 +109,10 @@ ar16 randomar16() {
 /***********************************************************************/
 
 
-/** Retourne le nombre de descentes d'une permutation en utilisant les commandes
- * du processeur sur les données vectorielles
+/** Retourne le nombre de descentes d'une permutation en utilisant les
+ *   commandes du processeur sur les données vectorielles
  * @param p une permutation en donnée vectorielle
- * @return le nombre de descente de la permutation
+ * @return le nombre de descentes de la permutation
  **/
 int nb_descents_optim(perm p) {
     /// Complétez la fonction
@@ -126,7 +126,7 @@ int nb_descents_optim(perm p) {
 /** double tableau 16x16 de toutes les transpositions **/
 array<array<perm, 16>, 16> transp;
 
-/** Initialise la varaible globale trans du tableau des transpositions **/
+/** Initialise la vararible globale trans du tableau des transpositions */
 void init_transp() {
     for (int i = 0; i<16; i++) {
         for (int j = 0; j<16; j++) {
@@ -135,7 +135,7 @@ void init_transp() {
     }
 }
 
-/** Applique la transpotion i,j à une permutation
+/** Applique la transposition i,j à une permutation
  * @param p une permutation de type vectorielle perm
  * @param i un entier entre 0 et 15
  * @param j un entier entre 0 et 15
